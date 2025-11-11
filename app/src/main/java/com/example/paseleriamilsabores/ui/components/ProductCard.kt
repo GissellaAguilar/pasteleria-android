@@ -14,12 +14,20 @@ import com.example.paseleriamilsabores.model.Producto
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.height(240.dp),
+        modifier = modifier
+            .height(240.dp)
+            .fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.elevatedCardElevation(6.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(8.dp)
+        ) {
             // 🖼️ Imagen local desde drawable
             Image(
                 painter = painterResource(id = producto.imagen),
@@ -30,17 +38,22 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.Crop
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 🏷️ Nombre del producto
             Text(
                 text = producto.nombre,
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 8.dp)
+                color = MaterialTheme.colorScheme.onSurface
             )
 
+            // 💰 Precio destacado con el color primario
             Text(
                 text = producto.precio,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.primary
-                )
+                ),
+                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }
