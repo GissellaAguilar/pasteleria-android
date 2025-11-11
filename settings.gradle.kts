@@ -16,9 +16,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // ESTE REPOSITORIO ES OBLIGATORIO PARA MAPBOX
+        maven {
+            url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
+        }
     }
 }
 
-rootProject.name = "PaseleriaMilSabores"
+rootProject.name = "PaseleriaMilSabores" // Asegúrate que el nombre de tu proyecto es correcto
 include(":app")
- 
