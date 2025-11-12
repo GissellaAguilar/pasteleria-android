@@ -8,7 +8,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.paseleriamilsabores.ui.components.BottomNavBar
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.paseleriamilsabores.ui.screens.CarritoScreen
+import com.example.paseleriamilsabores.ui.screens.ContactoScreen
 import com.example.paseleriamilsabores.ui.screens.HomeScreen
+import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,11 +24,11 @@ fun AppNavigation() {
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
-    ) { innerPadding ->   // 👈 AQUÍ defines innerPadding
+    ) { innerPadding ->   
         NavHost(
             navController = navController,
             startDestination = AppScreens.Home.route,
-            modifier = Modifier.padding(innerPadding) // 👈 AQUÍ lo usas
+            modifier = Modifier.padding(innerPadding) 
         ) {
             composable(AppScreens.Home.route) { HomeScreen(navController) }
             composable(AppScreens.Login.route) { /* LoginScreen(navController) */ }
