@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.compose.PaseleriaMilSaboresTheme
 import com.example.paseleriamilsabores.navigation.AppNavigation
+import com.example.paseleriamilsabores.ui.components.BottomNavBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     AppNavigation() // Asegúrate de que llamas a tu sistema de navegación aquí
+
                 }
             }
         }

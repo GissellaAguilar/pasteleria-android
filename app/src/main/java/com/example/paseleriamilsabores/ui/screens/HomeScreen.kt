@@ -7,7 +7,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.paseleriamilsabores.ui.components.BottomNavBar
 import com.example.paseleriamilsabores.ui.components.CarouselSection
 import com.example.paseleriamilsabores.ui.components.ProductGrid
 
@@ -57,8 +56,7 @@ fun HomeScreen(navController: NavController) {
             }
         },
 
-        // 🔹 Barra inferior
-        bottomBar = { BottomNavBar() }
+
     ) { padding ->
         Column(
             modifier = Modifier
