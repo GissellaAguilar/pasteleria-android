@@ -48,17 +48,6 @@ fun BottomNavBar(navController : NavController) {
         )
 
         NavigationBarItem(
-            selected = currentRoute == AppScreens.Carrito.route,
-            onClick = {
-                navController.navigate(AppScreens.Carrito.route) {
-                    popUpTo(AppScreens.Home.route)
-                    launchSingleTop = true
-                }
-            },
-            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito") },
-            label = { Text("Carrito") }
-        )
-        NavigationBarItem(
             selected = false,
             onClick = {navController.navigate(AppScreens.Contacto.route){
                 popUpTo(AppScreens.Home.route)
