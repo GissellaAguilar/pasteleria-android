@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.paseleriamilsabores.ui.screens.HomeScreen
+import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 
 @Composable
 fun AppNavigation() {
@@ -13,6 +14,7 @@ fun AppNavigation() {
         composable(AppScreens.Home.route) { HomeScreen(navController) }
         composable(AppScreens.Login.route) { /* Aquí llamarás a tu LoginScreen() */ }
         composable(AppScreens.Registro.route) { /* ... */ }
+        composable(AppScreens.Producto.route) { ProductosScreen() }
         composable(AppScreens.Tortas.route) { /* ... */ }
         composable(AppScreens.Postres.route) { /* ... */ }
         composable(AppScreens.Carrito.route) { /* ... */ }

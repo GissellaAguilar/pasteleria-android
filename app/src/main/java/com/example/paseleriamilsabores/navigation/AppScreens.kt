@@ -1,9 +1,11 @@
 package com.example.paseleriamilsabores.navigation
 
+
 sealed class AppScreens(val route: String) {
     object Home : AppScreens("home")
     object Login : AppScreens("login")
     object Registro : AppScreens("registro")
+    object Producto : AppScreens("producto")
     object Tortas : AppScreens("tortas")
     object Postres : AppScreens("postres")
     object DetalleProducto : AppScreens("detalle/{productoId}") // Ruta con argumento
