@@ -26,12 +26,27 @@ fun BottomNavBar(navController : NavController) {
             icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
             label = { Text("Inicio") }
         )
+
+
         NavigationBarItem(
             selected = false,
             onClick = {},
             icon = { Icon(Icons.Default.List, contentDescription = "Catálogo") },
             label = { Text("Catálogo") }
         )
+
+        NavigationBarItem(
+            selected = currentRoute == AppScreens.Carrito.route,
+            onClick = {
+                navController.navigate(AppScreens.Carrito.route) {
+                    popUpTo(AppScreens.Home.route)
+                    launchSingleTop = true
+                }
+            },
+            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito") },
+            label = { Text("Carrito") }
+        )
+
         NavigationBarItem(
             selected = currentRoute == AppScreens.Carrito.route,
             onClick = {
