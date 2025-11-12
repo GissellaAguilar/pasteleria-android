@@ -21,6 +21,7 @@ import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val cartViewModel: CarritoViewModel = viewModel()
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
@@ -35,9 +36,9 @@ fun AppNavigation() {
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
             composable(AppScreens.Tortas.route) { /* TortasScreen(navController) */ }
             composable(AppScreens.Postres.route) { /* PostresScreen(navController) */ }
-            composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController) }
+            composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController, viewModel = cartViewModel)}
             composable(AppScreens.Checkout.route) { /* CheckoutScreen(navController) */ }
-            composable(AppScreens.Contacto.route) { /* ContactoScreen(navController) */ }
+            composable(AppScreens.Contacto.route) { ContactoScreen(navController = navController)}
         }
     }
 }
