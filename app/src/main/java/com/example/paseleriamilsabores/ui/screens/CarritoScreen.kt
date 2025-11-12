@@ -46,12 +46,7 @@ fun CarritoScreen(navController: NavController, viewModel: CarritoViewModel = vi
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("🛒 Carrito de Compras") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                }
+                title = { Text("🛒 Carrito de Compras") }
             )
         }
     ) { paddingValues ->
