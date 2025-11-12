@@ -35,7 +35,7 @@ fun AppNavigation() {
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
             composable(AppScreens.Tortas.route) { /* TortasScreen(navController) */ }
             composable(AppScreens.Postres.route) { /* PostresScreen(navController) */ }
-            composable(AppScreens.Carrito.route) { /* CarritoScreen(navController) */ }
+            composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController) }
             composable(AppScreens.Checkout.route) { /* CheckoutScreen(navController) */ }
             composable(AppScreens.Contacto.route) { /* ContactoScreen(navController) */ }
         }
