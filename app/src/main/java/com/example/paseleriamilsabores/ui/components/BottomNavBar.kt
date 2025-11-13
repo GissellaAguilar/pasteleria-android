@@ -30,9 +30,14 @@ fun BottomNavBar(navController : NavController) {
 
         NavigationBarItem(
             selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.List, contentDescription = "Catálogo") },
-            label = { Text("Catálogo") }
+            onClick = {
+                navController.navigate(AppScreens.Producto.route){
+                    popUpTo(AppScreens.Home.route)
+                    launchSingleTop = true
+                }
+            },
+            icon = { Icon(Icons.Default.List, contentDescription = "Productos") },
+            label = { Text("Productos") }
         )
 
         NavigationBarItem(

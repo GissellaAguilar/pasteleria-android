@@ -20,6 +20,8 @@ import com.example.paseleriamilsabores.ui.screens.PerfilScreen
 import com.example.paseleriamilsabores.ui.screens.RegistroScreen
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import com.example.paseleriamilsabores.ui.screens.CheckoutScreen
+import com.example.paseleriamilsabores.ui.screens.OrderFailureScreen
+import com.example.paseleriamilsabores.ui.screens.OrderSuccessScreen
 import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,15 +43,39 @@ fun AppNavigation() {
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
             composable(AppScreens.Producto.route) { ProductosScreen()}
             composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController, viewModel = cartViewModel)}
-            composable(AppScreens.Checkout.route) { CheckoutScreen(navController = navController, viewModel = cartViewModel, onCompraExitosa = { codigoOrden ->
-                // Ejemplo: volver al Home o mostrar alerta
-                println("Compra exitosa, código: $codigoOrden")
-                navController.navigate(AppScreens.Home.route)
+            composable(AppScreens.Checkout.route) { CheckoutScreen(
+                navController = navController,
+                viewModel = cartViewModel,
+                onCompraExitosa = {
+                    navController.navigate(AppScreens.OrderSuccess.route)
             },
-                onCompraFallida = { codigoOrden ->
-                    println("Error en compra, código: $codigoOrden")
-                    // Podrías navegar a una pantalla de error o mostrar un snackbar
+                onCompraFallida = {
+                    navController.navigate(AppScreens.OrderFailure.route)
                 }) }
+
+            // ✔️ ORDER SUCCESS SCREEN
+            composable(AppScreens.OrderSuccess.route) {
+
+                OrderSuccessScreen(
+                    navController = navController,
+                    usuario = cartViewModel.usuarioActual!!,
+                    carrito = cartViewModel.ultimoCarrito?: emptyList(),
+                    totalReal = cartViewModel.ultimoTotalPagado?: 0.0,
+                    codigoOrden = cartViewModel.ultimoCodigoOrden ?: "N/A"
+                )
+            }
+
+            // ✔️ ORDER FAILURE SCREEN
+            composable(AppScreens.OrderFailure.route) {
+
+                OrderFailureScreen(
+                    navController = navController,
+                    usuario = cartViewModel.usuarioActual!!,
+                    carrito = cartViewModel.ultimoCarrito?: emptyList(),
+                    totalReal = cartViewModel.ultimoTotalPagado?: 0.0,
+                    codigoOrden = cartViewModel.ultimoCodigoOrden ?: "N/A"
+                )
+            }
             composable(AppScreens.Contacto.route) { ContactoScreen(navController = navController)}
             composable(AppScreens.Mas.route) { MasScreen(navController = navController) }
             composable(AppScreens.Perfil.route) { PerfilScreen() }
