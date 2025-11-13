@@ -1,25 +1,62 @@
 package com.example.paseleriamilsabores.navigation
 
+import androidx.compose.material3.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.paseleriamilsabores.ui.components.BottomNavBar
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.paseleriamilsabores.ui.screens.CarritoScreen
+import com.example.paseleriamilsabores.ui.screens.ContactoScreen
 import com.example.paseleriamilsabores.ui.screens.HomeScreen
+import com.example.paseleriamilsabores.ui.screens.MasScreen
+import com.example.paseleriamilsabores.ui.screens.PerfilScreen
+import com.example.paseleriamilsabores.ui.screens.RegistroScreen
+import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.ui.screens.CheckoutScreen
 import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.Producto.route) {
-        composable(AppScreens.Home.route) { HomeScreen(navController) }
-        composable(AppScreens.Login.route) { /* Aquí llamarás a tu LoginScreen() */ }
-        composable(AppScreens.Registro.route) { /* ... */ }
-        composable(AppScreens.Producto.route) { ProductosScreen() }
-        composable(AppScreens.Tortas.route) { /* ... */ }
-        composable(AppScreens.Postres.route) { /* ... */ }
-        composable(AppScreens.Carrito.route) { /* ... */ }
-        composable(AppScreens.Checkout.route) { /* ... */ }
-        composable(AppScreens.Contacto.route) { /* Aquí irá la pantalla con geolocalización */ }
-        // ... y así con las 11 pantallas
+    val cartViewModel: CarritoViewModel = viewModel()
+
+    Scaffold(
+        bottomBar = { BottomNavBar(navController) }
+    ) { innerPadding ->   
+        NavHost(
+            navController = navController,
+            startDestination = AppScreens.Home.route,
+            modifier = Modifier.padding(innerPadding) 
+        ) {
+            composable(AppScreens.Home.route) { HomeScreen(navController) }
+            composable(AppScreens.Login.route) { /* LoginScreen(navController) */ }
+            composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
+            composable(AppScreens.Producto.route) { ProductosScreen()}
+            composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController, viewModel = cartViewModel)}
+            composable(AppScreens.Checkout.route) { CheckoutScreen(navController = navController, viewModel = cartViewModel, onCompraExitosa = { codigoOrden ->
+                // Ejemplo: volver al Home o mostrar alerta
+                println("Compra exitosa, código: $codigoOrden")
+                navController.navigate(AppScreens.Home.route)
+            },
+                onCompraFallida = { codigoOrden ->
+                    println("Error en compra, código: $codigoOrden")
+                    // Podrías navegar a una pantalla de error o mostrar un snackbar
+                }) }
+            composable(AppScreens.Contacto.route) { ContactoScreen(navController = navController)}
+            composable(AppScreens.Mas.route) { MasScreen(navController = navController) }
+            composable(AppScreens.Perfil.route) { PerfilScreen() }
+            composable(AppScreens.Registro.route){ RegistroScreen(navController) }
+
+
+        }
     }
 }
+
