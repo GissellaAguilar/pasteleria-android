@@ -15,6 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.paseleriamilsabores.ui.screens.CarritoScreen
 import com.example.paseleriamilsabores.ui.screens.ContactoScreen
 import com.example.paseleriamilsabores.ui.screens.HomeScreen
+import com.example.paseleriamilsabores.ui.screens.MasScreen
+import com.example.paseleriamilsabores.ui.screens.PerfilScreen
+import com.example.paseleriamilsabores.ui.screens.RegistroScreen
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import com.example.paseleriamilsabores.ui.screens.CheckoutScreen
 
@@ -48,6 +51,11 @@ fun AppNavigation() {
                     // Podrías navegar a una pantalla de error o mostrar un snackbar
                 }) }
             composable(AppScreens.Contacto.route) { ContactoScreen(navController = navController)}
+            composable(AppScreens.Mas.route) { MasScreen(navController = navController) }
+            composable(AppScreens.Perfil.route) { PerfilScreen() }
+            composable(AppScreens.Registro.route){ RegistroScreen(navController) }
+
+
         }
     }
 }

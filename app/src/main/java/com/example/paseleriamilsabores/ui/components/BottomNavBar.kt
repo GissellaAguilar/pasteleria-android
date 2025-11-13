@@ -47,21 +47,30 @@ fun BottomNavBar(navController : NavController) {
             label = { Text("Carrito") }
         )
 
+
         NavigationBarItem(
-            selected = false,
-            onClick = {navController.navigate(AppScreens.Contacto.route){
-                popUpTo(AppScreens.Home.route)
-                launchSingleTop = true
-            }
-                      },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Perfil") },
-            label = { Text("Perfil") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.MoreVert, contentDescription = "Mas") },
+            selected = currentRoute == AppScreens.Mas.route,
+            onClick = {
+                navController.navigate(AppScreens.Mas.route) {
+                    popUpTo(AppScreens.Home.route)
+                    launchSingleTop = true
+                }
+            },
+            icon = { Icon(Icons.Default.MoreVert, contentDescription = "Más") },
             label = { Text("Más") }
+        )
+
+
+        NavigationBarItem(
+            selected = currentRoute == AppScreens.Registro.route,
+            onClick = {
+                navController.navigate(AppScreens.Registro.route) {
+                    popUpTo(AppScreens.Home.route)
+                    launchSingleTop = true
+                }
+            },
+            icon = { Icon(Icons.Default.MoreVert, contentDescription = "Registro") },
+            label = { Text("Registro") }
         )
     }
 }
