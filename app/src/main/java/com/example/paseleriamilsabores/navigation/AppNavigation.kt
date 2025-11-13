@@ -19,6 +19,8 @@ import com.example.paseleriamilsabores.ui.screens.MasScreen
 import com.example.paseleriamilsabores.ui.screens.PerfilScreen
 import com.example.paseleriamilsabores.ui.screens.RegistroScreen
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.ui.screens.CheckoutScreen
+import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,10 +39,17 @@ fun AppNavigation() {
             composable(AppScreens.Home.route) { HomeScreen(navController) }
             composable(AppScreens.Login.route) { /* LoginScreen(navController) */ }
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
-            composable(AppScreens.Tortas.route) { /* TortasScreen(navController) */ }
-            composable(AppScreens.Postres.route) { /* PostresScreen(navController) */ }
+            composable(AppScreens.Producto.route) { ProductosScreen()}
             composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController, viewModel = cartViewModel)}
-            composable(AppScreens.Checkout.route) { /* CheckoutScreen(navController) */ }
+            composable(AppScreens.Checkout.route) { CheckoutScreen(navController = navController, viewModel = cartViewModel, onCompraExitosa = { codigoOrden ->
+                // Ejemplo: volver al Home o mostrar alerta
+                println("Compra exitosa, código: $codigoOrden")
+                navController.navigate(AppScreens.Home.route)
+            },
+                onCompraFallida = { codigoOrden ->
+                    println("Error en compra, código: $codigoOrden")
+                    // Podrías navegar a una pantalla de error o mostrar un snackbar
+                }) }
             composable(AppScreens.Contacto.route) { ContactoScreen(navController = navController)}
             composable(AppScreens.Mas.route) { MasScreen(navController = navController) }
             composable(AppScreens.Perfil.route) { PerfilScreen() }
