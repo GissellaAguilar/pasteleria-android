@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.ui.components.CarouselSection
 import com.example.paseleriamilsabores.ui.components.ProductGrid
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun HomeScreen(navController: NavController) {
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
@@ -43,7 +46,7 @@ fun HomeScreen(navController: NavController) {
 
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 1.dp)
             ) {
                 // Contenido desplegable de la barra de búsqueda
                 Text(
