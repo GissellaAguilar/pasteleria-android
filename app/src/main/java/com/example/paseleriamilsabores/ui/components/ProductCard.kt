@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.paseleriamilsabores.model.Producto
+import com.example.paseleriamilsabores.data.Producto
 
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
@@ -30,7 +30,7 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
         ) {
             // 🖼️ Imagen local desde drawable
             Image(
-                painter = painterResource(id = producto.imagen),
+                painter = painterResource(id = producto.ImgProduct),
                 contentDescription = producto.nombre,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -47,6 +47,7 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurface
             )
 
+            /*
             // 💰 Precio destacado con el color primario
             Text(
                 text = producto.precio,
@@ -55,6 +56,8 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 ),
                 modifier = Modifier.padding(top = 4.dp)
             )
+
+             */
         }
     }
 }
