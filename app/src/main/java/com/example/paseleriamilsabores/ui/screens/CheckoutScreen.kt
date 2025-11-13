@@ -35,12 +35,6 @@ fun CheckoutScreen(
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
 
-    // Cargar datos de prueba solo si el carrito está vacío
-    LaunchedEffect(Unit) {
-        if (carrito.isEmpty()) {
-            viewModel.cargarDatosIniciales()
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -76,7 +70,7 @@ fun CheckoutScreen(
                                 Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("${item.nombre} x${item.cantidad}")
+                                Text("${item.producto.nombre} x${item.cantidad}")
                                 Text("$${"%,.0f".format(item.subtotal)}")
                             }
                         }

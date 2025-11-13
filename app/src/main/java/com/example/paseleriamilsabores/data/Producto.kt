@@ -2,8 +2,6 @@ package com.example.paseleriamilsabores.data
 
 import androidx.annotation.DrawableRes
 
-
-
 enum class ProductoCategoria{
     TODOS,
     TORTAS,

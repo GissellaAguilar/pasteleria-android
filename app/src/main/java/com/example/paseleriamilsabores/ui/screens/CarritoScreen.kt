@@ -33,10 +33,6 @@ fun CarritoScreen(navController: NavController, viewModel: CarritoViewModel = vi
     val carritoItems by viewModel.carrito.collectAsState()
     val totalPagar by viewModel.totalPagar.collectAsState()
 
-    // Cargar datos iniciales solo una vez
-    LaunchedEffect(Unit) {
-        viewModel.cargarDatosIniciales()
-    }
 
     val total = carritoItems.sumOf { it.subtotal }
 
@@ -90,15 +86,15 @@ fun CartItemRow(item: ItemCarrito, viewModel: CarritoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(item.nombre, style = MaterialTheme.typography.titleMedium)
+                Text(item.producto.nombre, style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(4.dp))
-                Text("Precio: ${currencyFormat.format(item.precio)}", style = MaterialTheme.typography.bodySmall)
+                Text("Precio: ${currencyFormat.format(item.producto.precio)}", style = MaterialTheme.typography.bodySmall)
             }
 
             QuantitySelector(
                 cantidad = item.cantidad,
-                onIncrease = { viewModel.modificarCantidad(item.id, item.cantidad + 1) },
-                onDecrease = { viewModel.modificarCantidad(item.id, item.cantidad - 1) }
+                onIncrease = { viewModel.modificarCantidad(item.producto.id, item.cantidad + 1) },
+                onDecrease = { viewModel.modificarCantidad(item.producto.id, item.cantidad - 1) }
             )
 
             Spacer(Modifier.width(16.dp))
@@ -111,7 +107,7 @@ fun CartItemRow(item: ItemCarrito, viewModel: CarritoViewModel) {
                 textAlign = TextAlign.End
             )
 
-            IconButton(onClick = { viewModel.eliminarItem(item.id) }) {
+            IconButton(onClick = { viewModel.eliminarProducto(item.producto.id) }) {
                 Icon(Icons.Filled.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
             }
         }

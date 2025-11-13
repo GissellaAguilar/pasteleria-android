@@ -66,7 +66,7 @@ fun OrderFailureScreen(
                                     .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(item.nombre)
+                                Text(item.producto.nombre)
                                 Text("x${item.cantidad}")
                                 Text("$${"%,.0f".format(item.subtotal)}")
                             }
