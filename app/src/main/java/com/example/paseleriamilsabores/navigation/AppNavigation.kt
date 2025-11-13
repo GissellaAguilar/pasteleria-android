@@ -10,7 +10,7 @@ import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.Home.route) {
+    NavHost(navController = navController, startDestination = AppScreens.Producto.route) {
         composable(AppScreens.Home.route) { HomeScreen(navController) }
         composable(AppScreens.Login.route) { /* Aquí llamarás a tu LoginScreen() */ }
         composable(AppScreens.Registro.route) { /* ... */ }

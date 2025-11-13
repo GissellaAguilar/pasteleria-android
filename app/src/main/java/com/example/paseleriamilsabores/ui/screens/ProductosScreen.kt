@@ -141,6 +141,7 @@ fun SearchBar(
     TextField(
         value = searchText,
         onValueChange = onSearchTextChanged,
+        enabled = true,
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.extraLarge),
@@ -194,10 +195,6 @@ fun categoriaChipsRow(
                     containerColor = Color(0xFFFAD1DC), // Rosa claro para no seleccionados
                     selectedLabelColor = Color.White,
                     labelColor = Color.Black
-                ),
-                border = FilterChipDefaults.filterChipBorder(
-                    selectedBorderColor = Color.Transparent,
-                    borderColor = Color.Transparent
                 )
             )
         }
