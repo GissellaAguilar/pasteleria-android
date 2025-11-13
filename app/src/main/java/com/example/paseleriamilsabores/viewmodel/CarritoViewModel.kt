@@ -3,6 +3,7 @@ package com.example.paseleriamilsabores.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paseleriamilsabores.data.ItemCarrito
+import com.example.paseleriamilsabores.data.Usuario
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,99 +12,99 @@ import kotlinx.coroutines.launch
 
 class CarritoViewModel : ViewModel() {
 
-    // Lista observable de ítems en el carrito
+    // -------------------------------------------------------
+    // DATOS PARA LAS PANTALLAS OrderSuccess y OrderFailure
+    // -------------------------------------------------------
+    var ultimoUsuario: Usuario? = null
+    var ultimoCodigoOrden: String? = null
+    var ultimoTotalPagado: Double? = null
+    var ultimoCarrito: List<ItemCarrito>? = null
+    var usuarioActual: Usuario? = null
+
+    // -------------------------------------------------------
+    // CARRITO
+    // -------------------------------------------------------
     private val _carrito = MutableStateFlow<List<ItemCarrito>>(emptyList())
     val carrito: StateFlow<List<ItemCarrito>> = _carrito.asStateFlow()
 
-    // Estados para Totales y Descuentos
+    // -------------------------------------------------------
+    // TOTAL (sin descuentos)
+    // -------------------------------------------------------
     private val _totalPagar = MutableStateFlow(0.0)
-    private val _descuentoAplicado = MutableStateFlow(0.0)
-
-    // Exponer versiones públicas e INMUTABLES
     val totalPagar: StateFlow<Double> = _totalPagar.asStateFlow()
-    val descuentoAplicado: StateFlow<Double> = _descuentoAplicado.asStateFlow()
-
-    private val DESCUENTO_PERCENTAGE = 0.10 // 10%
 
     init {
-        // Observa cambios en el carrito para recalcular totales
+        // Observa cambios en el carrito para recalcular total
         viewModelScope.launch {
             _carrito.collect { items ->
                 val subtotal = items.sumOf { it.subtotal }
-                val descuento = if (subtotal > 0) subtotal * DESCUENTO_PERCENTAGE else 0.0
-
-                _totalPagar.value = subtotal - descuento
-                _descuentoAplicado.value = descuento
+                _totalPagar.value = subtotal  // SIN DESCUENTO
             }
         }
     }
 
-    // --------------------------------------------------------
-    // ✅ NUEVA FUNCIÓN: Carga de datos iniciales para testing
-    // --------------------------------------------------------
-
-    /**
-     * Carga ítems de prueba en el carrito.
-     * Ideal para testing o vista previa.
-     */
+    // -------------------------------------------------------
+    // DATOS DE PRUEBA
+    // -------------------------------------------------------
     fun cargarDatosIniciales() {
         if (_carrito.value.isEmpty()) {
-            val itemsDePrueba = listOf(
-                ItemCarrito(id = "1", nombre = "Torta Tres Leches", precio = 15000.0, cantidad = 1),
-                ItemCarrito(id = "2", nombre = "Cheesecake Frambuesa", precio = 12000.0, cantidad = 2),
-                ItemCarrito(id = "3", nombre = "Brownie Chocolate", precio = 8000.0, cantidad = 3)
+            _carrito.value = listOf(
+                ItemCarrito("1", "Torta Tres Leches", 15000.0, 1),
+                ItemCarrito("2", "Cheesecake Frambuesa", 12000.0, 2),
+                ItemCarrito("3", "Brownie Chocolate", 8000.0, 3)
             )
-            _carrito.value = itemsDePrueba
         }
     }
 
-    // --------------------------------------------------------
-    // Lógica de Pago
-    // --------------------------------------------------------
+    // -------------------------------------------------------
+    // PROCESO DE PAGO
+    // -------------------------------------------------------
+    fun realizarPago(usuario: Usuario): Boolean {
 
-    fun realizarPago(): Boolean {
-        val pagoExitoso = _totalPagar.value > 0.0 && (Math.random() > 0.1)
+        this.usuarioActual = usuario
+        val pagoExitoso = _totalPagar.value > 0 && (Math.random() > 0.1)
 
-        if (pagoExitoso) {
-            limpiarCarrito()
-        }
+        // Código de orden
+        val codigo = (10000000..99999999).random().toString()
+
+        // Guardar datos para pantallas de éxito/fallo
+        ultimoUsuario = usuario
+        ultimoCodigoOrden = codigo
+        ultimoTotalPagado = totalPagar.value      // SIN DESCUENTO
+        ultimoCarrito = carrito.value.toList()
+
+        if (pagoExitoso) limpiarCarrito()
 
         return pagoExitoso
     }
 
-    // --------------------------------------------------------
-    // Funciones de Mutación
-    // --------------------------------------------------------
-
+    // -------------------------------------------------------
+    // MUTACIONES DEL CARRITO
+    // -------------------------------------------------------
     fun agregarItem(item: ItemCarrito) {
-        _carrito.update { currentItems ->
-            val existingItem = currentItems.find { it.id == item.id }
-            if (existingItem != null) {
-                currentItems.map {
+        _carrito.update { items ->
+            val existente = items.find { it.id == item.id }
+            if (existente != null) {
+                items.map {
                     if (it.id == item.id) it.copy(cantidad = it.cantidad + 1) else it
                 }
             } else {
-                currentItems + item.copy(cantidad = 1)
+                items + item.copy(cantidad = 1)
             }
         }
     }
 
-    fun modificarCantidad(itemId: String, nuevaCantidad: Int) {
-        _carrito.update { currentItems ->
-            if (nuevaCantidad <= 0) {
-                currentItems.filter { it.id != itemId }
-            } else {
-                currentItems.map {
-                    if (it.id == itemId) it.copy(cantidad = nuevaCantidad) else it
-                }
+    fun modificarCantidad(itemId: String, cantidad: Int) {
+        _carrito.update { items ->
+            if (cantidad <= 0) items.filter { it.id != itemId }
+            else items.map {
+                if (it.id == itemId) it.copy(cantidad = cantidad) else it
             }
         }
     }
 
     fun eliminarItem(itemId: String) {
-        _carrito.update { currentItems ->
-            currentItems.filter { it.id != itemId }
-        }
+        _carrito.update { items -> items.filter { it.id != itemId } }
     }
 
     fun limpiarCarrito() {

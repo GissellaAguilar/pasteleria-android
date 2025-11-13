@@ -9,33 +9,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.paseleriamilsabores.data.Usuario
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckoutScreen(navController: NavController, viewModel: CarritoViewModel,
-                   onCompraExitosa: (String) -> Unit,
-                   onCompraFallida: (String) -> Unit
+fun CheckoutScreen(
+    navController: NavController,
+    viewModel: CarritoViewModel,
+    onCompraExitosa: (String) -> Unit,
+    onCompraFallida: (String) -> Unit
 ) {
     val carrito by viewModel.carrito.collectAsState()
-    val totalPagar by viewModel.totalPagar.collectAsState()
-    val descuento by viewModel.descuentoAplicado.collectAsState()
+    val totalPagar by viewModel.totalPagar.collectAsState()   // Total real (sin descuento)
 
     val scope = rememberCoroutineScope()
 
-    // Estado del formulario del cliente
+    // Estado del formulario
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var direccion by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
-    var indicaciones by remember { mutableStateOf("") }
 
-    // Si el carrito está vacío, cargamos datos de ejemplo (solo para testing)
+    // Cargar datos de prueba solo si el carrito está vacío
     LaunchedEffect(Unit) {
         if (carrito.isEmpty()) {
             viewModel.cargarDatosIniciales()
@@ -44,9 +44,7 @@ fun CheckoutScreen(navController: NavController, viewModel: CarritoViewModel,
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Checkout") }
-            )
+            TopAppBar(title = { Text("Checkout") })
         }
     ) { padding ->
         LazyColumn(
@@ -57,11 +55,15 @@ fun CheckoutScreen(navController: NavController, viewModel: CarritoViewModel,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            /** --- Carrito de compra --- **/
+            // ------------------------------
+            // Carrito
+            // ------------------------------
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                    ),
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(Modifier.padding(16.dp)) {
@@ -69,46 +71,40 @@ fun CheckoutScreen(navController: NavController, viewModel: CarritoViewModel,
 
                         Spacer(Modifier.height(8.dp))
 
-                        if (carrito.isEmpty()) {
-                            Text("Tu carrito está vacío.")
-                        } else {
-                            carrito.forEach { item ->
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text("${item.nombre} x${item.cantidad}")
-                                    Text("$${"%,.0f".format(item.subtotal)}")
-                                }
+                        carrito.forEach { item ->
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("${item.nombre} x${item.cantidad}")
+                                Text("$${"%,.0f".format(item.subtotal)}")
                             }
-
-                            if (descuento > 0) {
-                                Text(
-                                    text = "Descuento aplicado: -$${"%,.0f".format(descuento)}",
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-
-                            Divider(Modifier.padding(vertical = 8.dp))
-
-                            Text(
-                                text = "Total a pagar: $${"%,.0f".format(totalPagar)}",
-                                style = MaterialTheme.typography.titleMedium
-                            )
                         }
+
+                        Divider(Modifier.padding(vertical = 8.dp))
+
+                        // Total real
+                        Text(
+                            text = "Total a pagar: $${"%,.0f".format(totalPagar)}",
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
                 }
             }
 
-            /** --- Formulario del cliente --- **/
+            // ------------------------------
+            // Formulario del Cliente
+            // ------------------------------
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                    ),
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(Modifier.padding(16.dp)) {
+
                         Text("Información del cliente", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
 
@@ -161,28 +157,37 @@ fun CheckoutScreen(navController: NavController, viewModel: CarritoViewModel,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        OutlinedTextField(
-                            value = indicaciones,
-                            onValueChange = { indicaciones = it },
-                            label = { Text("Indicaciones para la entrega (opcional)") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
                         Spacer(Modifier.height(16.dp))
 
+                        // Botón de pago
                         Button(
                             onClick = {
                                 scope.launch {
-                                    val exito = viewModel.realizarPago()
-                                    val codigoOrden = (10000000..99999999).random().toString()
+                                    val usuarioActual = Usuario(
+                                        nombre = nombre,
+                                        apellidos = apellidos,
+                                        correo = correo,
+                                        direccion = direccion,
+                                        region = region,
+                                        comuna = comuna
+                                    )
 
-                                    if (exito) {
-                                        onCompraExitosa(codigoOrden)
-                                    } else {
-                                        onCompraFallida(codigoOrden)
-                                    }
+                                    val exito = viewModel.realizarPago(usuarioActual)
+
+                                    val codigoOrden = viewModel.ultimoCodigoOrden ?: "N/A"
+
+                                    if (exito) onCompraExitosa(codigoOrden)
+                                    else onCompraFallida(codigoOrden)
                                 }
                             },
+                            enabled = nombre.isNotBlank() &&
+                                    apellidos.isNotBlank() &&
+                                    correo.isNotBlank() &&
+                                    direccion.isNotBlank() &&
+                                    region.isNotBlank() &&
+                                    comuna.isNotBlank() &&
+                                    carrito.isNotEmpty(),
+
                             modifier = Modifier
                                 .align(Alignment.End)
                                 .height(50.dp)
