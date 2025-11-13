@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1023786529715",
+    "project_id": "milsaboresapp-64313",
+    "storage_bucket": "milsaboresapp-64313.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023786529715:android:9f1cee965537ace7de11c6",
+        "android_client_info": {
+          "package_name": "com.example.paseleriamilsabores"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6VMIuBuxF-RmR7q0x6X3uYjiwo-wqASo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
