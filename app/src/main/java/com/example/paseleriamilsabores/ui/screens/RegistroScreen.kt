@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.example.paseleriamilsabores.navigation.AppScreens
+import com.google.firebase.auth.userProfileChangeRequest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,6 +97,13 @@ fun RegistroScreen(navController: NavController) {
                             .addOnCompleteListener { task ->
                                 isLoading = false
                                 if (task.isSuccessful) {
+
+                                    val user = auth.currentUser
+                                    val profileUpdates = userProfileChangeRequest {
+                                        displayName = "$firstName $lastName"
+                                    }
+                                    user?.updateProfile(profileUpdates)
+
                                     Toast.makeText(context, "Registro exitoso 🎉", Toast.LENGTH_SHORT).show()
                                     navController.navigate(AppScreens.Login.route) {
                                         popUpTo(AppScreens.Registro.route) { inclusive = true }

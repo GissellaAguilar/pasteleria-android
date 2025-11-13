@@ -18,5 +18,6 @@ sealed class AppScreens(val route: String) {
     object Perfil : AppScreens("perfil")
 
 
+
 }
 

@@ -7,37 +7,53 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.navigation.AppScreens
+import com.google.firebase.auth.FirebaseAuth
 
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MasScreen(navController: NavController) {
-    val isUserLoggedIn = true
-    val userName = "Jorge Gálvez"
+
+    var user by remember { mutableStateOf(FirebaseAuth.getInstance().currentUser) }
+
+        DisposableEffect(Unit) {
+        val listener = FirebaseAuth.AuthStateListener {
+            user = it.currentUser
+        }
+        FirebaseAuth.getInstance().addAuthStateListener(listener)
+
+        onDispose {
+            FirebaseAuth.getInstance().removeAuthStateListener(listener)
+        }
+    }
+
+    val isUserLoggedIn = user != null
+    val userName = user?.displayName ?: "Inicia sesión"
 
     Scaffold(
         topBar = {
-            // En lugar del título fijo, mostramos el botón con el nombre
             TopAppBar(
                 title = {
                     Text(
                         text = userName,
                         modifier = Modifier.clickable {
                             if (isUserLoggedIn) {
-                                navController.navigate(AppScreens.Perfil.route) // Pantalla de perfil (aún no creada)
+                                navController.navigate(AppScreens.Perfil.route)
                             } else {
                                 navController.navigate(AppScreens.Login.route)
-
                             }
-                        },
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleMedium
+                        }
                     )
                 },
                 actions = {
@@ -48,10 +64,7 @@ fun MasScreen(navController: NavController) {
                             navController.navigate(AppScreens.Login.route)
                         }
                     }) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Perfil"
-                        )
+                        Icon(Icons.Default.Person, contentDescription = "Perfil")
                     }
                 }
             )
@@ -64,26 +77,29 @@ fun MasScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
             OpcionItem("Inicio", Icons.Default.Home) {
                 navController.navigate(AppScreens.Home.route)
             }
-            OpcionItem("Buscar", Icons.Default.Search) {
 
-            }
+            OpcionItem("Buscar", Icons.Default.Search) {}
+
             OpcionItem("Contacto", Icons.Default.Email) {
                 navController.navigate(AppScreens.Contacto.route)
             }
-            OpcionItem("Nosotros", Icons.Default.Info) {
-                // Puedes crear una pantalla Nosotros luego
-                // navController.navigate(AppScreens.Nosotros.route)
-            }
-            OpcionItem("Cerrar sesión", Icons.Default.ExitToApp) {
-                // Aquí podrías abrir LoginScreen, por ejemplo
-                navController.navigate(AppScreens.Login.route)
+
+            OpcionItem("Nosotros", Icons.Default.Info) {}
+
+            if (isUserLoggedIn) {
+                OpcionItem("Cerrar sesión", Icons.Default.ExitToApp) {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(AppScreens.Login.route)
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun OpcionItem(texto: String, icono: androidx.compose.ui.graphics.vector.ImageVector, onClick: () -> Unit) {
