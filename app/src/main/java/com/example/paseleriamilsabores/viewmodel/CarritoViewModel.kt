@@ -11,19 +11,17 @@ import kotlinx.coroutines.launch
 
 class CarritoViewModel : ViewModel() {
 
-    // Lista observable de ítems en el carrito (Esto ya está bien)
+    // Lista observable de ítems en el carrito
     private val _carrito = MutableStateFlow<List<ItemCarrito>>(emptyList())
     val carrito: StateFlow<List<ItemCarrito>> = _carrito.asStateFlow()
 
-    // 1. Crear propiedades privadas y MUTABLES para uso interno del ViewModel
+    // Estados para Totales y Descuentos
     private val _totalPagar = MutableStateFlow(0.0)
     private val _descuentoAplicado = MutableStateFlow(0.0)
 
-    // 2. Exponer versiones públicas e INMUTABLES para que la UI las observe
+    // Exponer versiones públicas e INMUTABLES
     val totalPagar: StateFlow<Double> = _totalPagar.asStateFlow()
     val descuentoAplicado: StateFlow<Double> = _descuentoAplicado.asStateFlow()
-
-    // ------------------------------------
 
     private val DESCUENTO_PERCENTAGE = 0.10 // 10%
 
@@ -34,13 +32,48 @@ class CarritoViewModel : ViewModel() {
                 val subtotal = items.sumOf { it.subtotal }
                 val descuento = if (subtotal > 0) subtotal * DESCUENTO_PERCENTAGE else 0.0
 
-                // 3. Modificar las propiedades privadas y mutables.
-                // ✅ Forma correcta, segura y limpia.
                 _totalPagar.value = subtotal - descuento
                 _descuentoAplicado.value = descuento
             }
         }
     }
+
+    // --------------------------------------------------------
+    // ✅ NUEVA FUNCIÓN: Carga de datos iniciales para testing
+    // --------------------------------------------------------
+
+    /**
+     * Carga ítems de prueba en el carrito.
+     * Ideal para testing o vista previa.
+     */
+    fun cargarDatosIniciales() {
+        if (_carrito.value.isEmpty()) {
+            val itemsDePrueba = listOf(
+                ItemCarrito(id = "1", nombre = "Torta Tres Leches", precio = 15000.0, cantidad = 1),
+                ItemCarrito(id = "2", nombre = "Cheesecake Frambuesa", precio = 12000.0, cantidad = 2),
+                ItemCarrito(id = "3", nombre = "Brownie Chocolate", precio = 8000.0, cantidad = 3)
+            )
+            _carrito.value = itemsDePrueba
+        }
+    }
+
+    // --------------------------------------------------------
+    // Lógica de Pago
+    // --------------------------------------------------------
+
+    fun realizarPago(): Boolean {
+        val pagoExitoso = _totalPagar.value > 0.0 && (Math.random() > 0.1)
+
+        if (pagoExitoso) {
+            limpiarCarrito()
+        }
+
+        return pagoExitoso
+    }
+
+    // --------------------------------------------------------
+    // Funciones de Mutación
+    // --------------------------------------------------------
 
     fun agregarItem(item: ItemCarrito) {
         _carrito.update { currentItems ->
