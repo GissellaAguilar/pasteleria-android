@@ -15,6 +15,7 @@ import com.example.paseleriamilsabores.data.Producto
 import com.example.paseleriamilsabores.data.ItemCarrito
 import com.example.paseleriamilsabores.ui.screens.BrightPink
 
+
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
     Card(
@@ -60,10 +61,11 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 ),
                 modifier = Modifier.padding(top = 4.dp)
             )
-<<<<<<< Updated upstream
 
              */
+
             Spacer(modifier = Modifier.height(8.dp))
+
         }
     }
 }

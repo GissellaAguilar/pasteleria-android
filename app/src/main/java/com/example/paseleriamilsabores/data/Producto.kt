@@ -87,7 +87,6 @@ val sampleProducto= listOf(
         categoria = ProductoCategoria.POSTRES
     ),
 
-    // --- TORTAS (CAKES) ---
     Producto(
         id = 9,
         nombre = "Torta Cuadrada Chocolate",
