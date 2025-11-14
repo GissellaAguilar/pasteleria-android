@@ -88,7 +88,18 @@ fun MasScreen(navController: NavController) {
                 navController.navigate(AppScreens.Contacto.route)
             }
 
-            OpcionItem("Nosotros", Icons.Default.Info) {}
+
+            OpcionItem("Cupones", Icons.Default.Build) {
+                navController.navigate(AppScreens.Pronto.route)
+            }
+
+            OpcionItem("Historial", Icons.Default.Build) {
+                navController.navigate(AppScreens.Pronto.route)
+            }
+
+            OpcionItem("Nosotros", Icons.Default.Info) {
+                navController.navigate(AppScreens.Nosotros.route)
+            }
 
             if (isUserLoggedIn) {
                 OpcionItem("Cerrar sesión", Icons.Default.ExitToApp) {

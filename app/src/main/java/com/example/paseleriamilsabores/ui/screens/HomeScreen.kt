@@ -68,18 +68,6 @@ fun HomeScreen(navController: NavController) {
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Tienda Online",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Text(
-                text = "Bienvenido a nuestra tienda online, donde encontrarás los mejores productos al mejor precio.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
 
             CarouselSection()
 
