@@ -37,7 +37,9 @@ fun BottomNavBar(navController : NavController) {
                 }
             },
             icon = { Icon(Icons.Default.List, contentDescription = "Productos") },
-            label = { Text("Productos") })
+            label = { Text("Productos") }
+
+    )
 
         NavigationBarItem(
             selected = currentRoute == AppScreens.Carrito.route,

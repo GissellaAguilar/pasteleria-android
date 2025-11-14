@@ -23,6 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage // <-- Importación necesaria para Coil
+import com.example.compose.backgroundLight
+import com.example.compose.errorContainerLight
+import com.example.compose.inversePrimaryLight
+import com.example.compose.inversePrimaryLightMediumContrast
+import com.example.compose.onBackgroundLight
+import com.example.compose.onTertiaryContainerLight
+import com.example.compose.secondaryContainerDarkMediumContrast
 import com.example.paseleriamilsabores.data.Producto
 import com.example.paseleriamilsabores.data.ProductoCategoria
 import com.example.paseleriamilsabores.data.sampleProducto
@@ -30,13 +37,7 @@ import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import java.util.*
 
 
-
-// Colores personalizados basados en el mockup (usando Material 3)
-val PastelPink = Color(0xFFF7A2BB) // Rosa pastel para el fondo
 val BrightPink = Color(0xFFFF4081) // Rosa brillante para botones y acentos
-val CardPink = Color(0xFFFDE9EE) // Rosa muy claro para el fondo de las tarjetas
-
-// Composable principal de la pantalla de productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductosScreen(carritoViewModel: CarritoViewModel) {
@@ -58,13 +59,13 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
     }
 
     Scaffold(
-        // Barra inferior (replicando la navegación inferior del mockup)
+
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(CardPink) // Fondo principal
+                .background(errorContainerLight)
                 .systemBarsPadding(), // Manejo de barras del sistema
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -96,7 +97,7 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
 
                     Button(
                         onClick = { carritoViewModel.agregarProducto(producto) },
-                        colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
+                        colors = ButtonDefaults.buttonColors(containerColor = onTertiaryContainerLight),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Agregar al carrito", color = Color.White)
@@ -105,14 +106,9 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-
-
-            // Espacio al final de la lista para el margen de la barra inferior
-            item { Spacer(modifier = Modifier.height(60.dp)) }
         }
     }
 }
-
 // ------------------------------------------
 // COMPONENTES REUTILIZABLES DE LA PANTALLA
 // ------------------------------------------
@@ -131,14 +127,10 @@ fun HeaderSection() {
                 text = "Pastelería mil sabores",
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = onBackgroundLight
                 )
             )
-            Text(
-                text = "Hola, lalala",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.DarkGray
-            )
+
         }
 
     }
@@ -159,7 +151,7 @@ fun SearchBar(
             .clip(MaterialTheme.shapes.extraLarge),
         placeholder = { Text("Buscar productos...") },
         leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = "Buscar", tint = BrightPink)
+            Icon(Icons.Default.Search, contentDescription = "Buscar", tint = inversePrimaryLight)
         },
 
         colors = TextFieldDefaults.colors(
@@ -169,16 +161,16 @@ fun SearchBar(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            cursorColor = BrightPink
+            cursorColor = inversePrimaryLight
         )
-        // -------------------------------------------------------------------
+
     )
 }
 
 @Composable
 fun categoriaChipsRow(
     seleccionCategoria: ProductoCategoria,
-    onseleccionCategoria: (ProductoCategoria) -> Unit // <-- FIRMA CORREGIDA: Acepta ProductoCategoria
+    onseleccionCategoria: (ProductoCategoria) -> Unit
 ) {
     // Definimos el orden de las categorías para los chips
     val categorias = ProductoCategoria.entries.toTypedArray()
@@ -191,10 +183,10 @@ fun categoriaChipsRow(
             val isSelected = categoria == seleccionCategoria
             FilterChip(
                 selected = isSelected,
-                onClick = { onseleccionCategoria(categoria) }, // <-- Pasa la categoría al callback
+                onClick = { onseleccionCategoria(categoria) }, // Pasa la categoría al callback
                 label = {
                     Text(
-                        // Formatear el nombre de la categoría (ej: TORTAS -> Tortas)
+
                         text = categoria.name.lowercase(Locale.ROOT)
                             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -203,10 +195,10 @@ fun categoriaChipsRow(
                 },
                 shape = MaterialTheme.shapes.extraLarge,
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = BrightPink,
-                    containerColor = Color(0xFFFAD1DC), // Rosa claro para no seleccionados
+                    selectedContainerColor = secondaryContainerDarkMediumContrast,
+                    containerColor = inversePrimaryLight,
                     selectedLabelColor = Color.White,
-                    labelColor = Color.Black
+                    labelColor = onBackgroundLight
                 )
             )
         }
@@ -217,11 +209,10 @@ fun categoriaChipsRow(
 fun ProductCard(producto: Producto) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Lógica para ver detalles del producto */ },
+            .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF5F7) // Fondo claro rosado
+            containerColor = Color(0xFFFFF5F7)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -231,7 +222,7 @@ fun ProductCard(producto: Producto) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Imagen del producto con Coil
+
             AsyncImage(
                 model = producto.ImgProduct,
                 contentDescription = producto.nombre,
