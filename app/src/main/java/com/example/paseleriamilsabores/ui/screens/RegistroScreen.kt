@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.example.paseleriamilsabores.navigation.AppScreens
+import com.example.paseleriamilsabores.data.Usuario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,9 +98,25 @@ fun RegistroScreen(navController: NavController) {
                                 isLoading = false
                                 if (task.isSuccessful) {
                                     Toast.makeText(context, "Registro exitoso 🎉", Toast.LENGTH_SHORT).show()
-                                    navController.navigate(AppScreens.Login.route) {
+
+                                    // Crear objeto Usuario
+                                    val nuevoUsuario = Usuario(
+                                        nombre = firstName,
+                                        apellidos = lastName,
+                                        correo = email,
+                                        direccion = "",
+                                        region = "",
+                                        comuna = ""
+                                    )
+
+                                    // Guardar usuario en savedStateHandle para pasarlo al checkout
+                                    navController.currentBackStackEntry?.savedStateHandle?.set("usuarioRegistrado", nuevoUsuario)
+
+                                    // Navegar al Checkout
+                                    navController.navigate(AppScreens.Checkout.route) {
                                         popUpTo(AppScreens.Registro.route) { inclusive = true }
                                     }
+
                                 } else {
                                     Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                                 }
