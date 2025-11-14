@@ -12,7 +12,7 @@ import com.example.paseleriamilsabores.data.sampleProducto
 @Composable
 fun ProductGrid() {
 
-    // ⬅️ USAR LA LISTA GLOBAL sampleProducto
+
     val productos = sampleProducto.take(6)
 
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -24,4 +24,5 @@ fun ProductGrid() {
             }
         }
     }
+
 }
