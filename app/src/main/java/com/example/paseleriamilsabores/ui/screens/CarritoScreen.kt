@@ -26,6 +26,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.graphics.Color
 import com.example.compose.backgroundLight
 import com.example.compose.errorContainerLight
+import com.example.compose.onTertiaryContainerLight
 import com.example.compose.primaryLight
 import com.mapbox.maps.extension.style.style
 
@@ -190,7 +191,7 @@ fun CartSummary(
                     enabled = total > 0,
                     modifier = Modifier.height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
+                        containerColor = onTertiaryContainerLight,
                         contentColor = MaterialTheme.colorScheme.onSecondary)
                 ) {
                     Text("Ir a Pagar ${currencyFormat.format(total)}", style = MaterialTheme.typography.bodyLarge)

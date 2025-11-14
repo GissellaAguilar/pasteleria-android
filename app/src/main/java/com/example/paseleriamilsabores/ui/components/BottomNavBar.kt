@@ -35,11 +35,11 @@ fun BottomNavBar(navController : NavController) {
                     popUpTo(AppScreens.Home.route)
                     launchSingleTop = true
                 }
-
             },
             icon = { Icon(Icons.Default.List, contentDescription = "Productos") },
             label = { Text("Productos") }
-        )
+
+    )
 
         NavigationBarItem(
             selected = currentRoute == AppScreens.Carrito.route,

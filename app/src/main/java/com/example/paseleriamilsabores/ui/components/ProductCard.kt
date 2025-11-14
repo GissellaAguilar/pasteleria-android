@@ -63,6 +63,7 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
 
 
 
+            Spacer(modifier = Modifier.height(8.dp))
 
 
 
