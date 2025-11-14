@@ -66,16 +66,5 @@ fun BottomNavBar(navController : NavController) {
         )
 
 
-        NavigationBarItem(
-            selected = currentRoute == AppScreens.Registro.route,
-            onClick = {
-                navController.navigate(AppScreens.Registro.route) {
-                    popUpTo(AppScreens.Home.route)
-                    launchSingleTop = true
-                }
-            },
-            icon = { Icon(Icons.Default.MoreVert, contentDescription = "Registro") },
-            label = { Text("Registro") }
-        )
     }
 }
