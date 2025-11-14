@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.compose.errorContainerLight
+import com.example.compose.onTertiaryContainerLight
 import com.example.paseleriamilsabores.data.ItemCarrito
 import com.example.paseleriamilsabores.data.Usuario
 
@@ -35,7 +36,8 @@ fun OrderFailureScreen(
                 modifier = Modifier.fillMaxWidth().background(color = errorContainerLight),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(16.dp)
+                    .fillMaxSize().background(color = MaterialTheme.colorScheme.errorContainer)) {
 
                     Text(
                         text = "❌ No se pudo realizar el pago",
@@ -54,7 +56,7 @@ fun OrderFailureScreen(
                         onClick = { navController.navigate("checkout") },
                         modifier = Modifier.align(Alignment.End),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
+                            containerColor = onTertiaryContainerLight,
                             contentColor = MaterialTheme.colorScheme.onSecondary)
                     ) {
                         Text("Volver a intentar", style = MaterialTheme.typography.bodyMedium)

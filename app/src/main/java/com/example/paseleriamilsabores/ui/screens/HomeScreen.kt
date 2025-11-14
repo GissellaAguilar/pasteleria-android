@@ -2,6 +2,7 @@ package com.example.paseleriamilsabores.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -61,19 +62,23 @@ fun HomeScreen(navController: NavController) {
 
 
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
         ) {
+            item {
+                CarouselSection()
 
-            CarouselSection()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            item {
+                ProductGrid()
+            }
 
-            ProductGrid()
         }
     }
 }

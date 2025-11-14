@@ -61,7 +61,6 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 ),
                 modifier = Modifier.padding(top = 4.dp)
             )
-<<<<<<< Updated upstream
 
              */
 
