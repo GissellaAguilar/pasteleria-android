@@ -20,6 +20,7 @@ import com.example.paseleriamilsabores.ui.screens.PerfilScreen
 import com.example.paseleriamilsabores.ui.screens.RegistroScreen
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import com.example.paseleriamilsabores.ui.screens.CheckoutScreen
+import com.example.paseleriamilsabores.ui.screens.LoginScreen
 import com.example.paseleriamilsabores.ui.screens.OrderFailureScreen
 import com.example.paseleriamilsabores.ui.screens.OrderSuccessScreen
 import com.example.paseleriamilsabores.ui.screens.ProductosScreen
@@ -39,7 +40,6 @@ fun AppNavigation() {
             modifier = Modifier.padding(innerPadding) 
         ) {
             composable(AppScreens.Home.route) { HomeScreen(navController) }
-            composable(AppScreens.Login.route) { /* LoginScreen(navController) */ }
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }
             composable(AppScreens.Producto.route) { ProductosScreen()}
             composable(AppScreens.Carrito.route) { CarritoScreen(navController = navController, viewModel = cartViewModel)}
@@ -80,6 +80,7 @@ fun AppNavigation() {
             composable(AppScreens.Mas.route) { MasScreen(navController = navController) }
             composable(AppScreens.Perfil.route) { PerfilScreen() }
             composable(AppScreens.Registro.route){ RegistroScreen(navController) }
+            composable(AppScreens.Login.route) { LoginScreen(navController) }
 
 
         }
