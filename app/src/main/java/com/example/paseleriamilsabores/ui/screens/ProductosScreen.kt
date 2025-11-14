@@ -21,10 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage // <-- Importación necesaria para Coil
 import com.example.paseleriamilsabores.data.Producto
 import com.example.paseleriamilsabores.data.ProductoCategoria
 import com.example.paseleriamilsabores.data.sampleProducto
+import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import java.util.*
 
 // Colores personalizados basados en el mockup (usando Material 3)
@@ -35,7 +37,9 @@ val CardPink = Color(0xFFFDE9EE) // Rosa muy claro para el fondo de las tarjetas
 // Composable principal de la pantalla de productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosScreen() {
+fun ProductosScreen(carritoViewModel: CarritoViewModel) {
+
+
     // 1. Estado para la categoría seleccionada (filtrado)
     var seleccionCategoria by remember { mutableStateOf(ProductoCategoria.TODOS) } // <-- VARIABLE DE ESTADO
 
@@ -53,8 +57,6 @@ fun ProductosScreen() {
 
     Scaffold(
         // Barra inferior (replicando la navegación inferior del mockup)
-        bottomBar = { PasteleriaBottomBar() },
-        modifier = Modifier.fillMaxSize().background(PastelPink)
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -64,6 +66,8 @@ fun ProductosScreen() {
                 .systemBarsPadding(), // Manejo de barras del sistema
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
+
+
         ) {
             // --- Encabezado y Barra de Búsqueda ---
             item {
@@ -78,14 +82,28 @@ fun ProductosScreen() {
             item {
                 categoriaChipsRow(
                     seleccionCategoria = seleccionCategoria,
-                    onseleccionCategoria = { seleccionCategoria = it } // <-- CORRECCIÓN: Asigna el nuevo valor 'it'
+                    onseleccionCategoria = { seleccionCategoria = it }
                 )
             }
-
-            // --- Lista de Productos ---
             items(filtrar) { producto ->
-                ProductCard(producto = producto)
+
+                Column {
+                    ProductCard(producto = producto)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = { carritoViewModel.agregarProducto(producto) },
+                        colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Agregar al carrito", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
+
 
             // Espacio al final de la lista para el margen de la barra inferior
             item { Spacer(modifier = Modifier.height(60.dp)) }
@@ -293,13 +311,13 @@ fun PasteleriaBottomBar() {
             )
         }
     }
-}
 
+}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewProductosScreen() {
     MaterialTheme {
-        ProductosScreen()
+        ProductosScreen(carritoViewModel = viewModel())
     }
 }
