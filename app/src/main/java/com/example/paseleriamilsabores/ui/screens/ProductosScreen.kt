@@ -21,11 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage // <-- Importación necesaria para Coil
 import com.example.paseleriamilsabores.data.Producto
 import com.example.paseleriamilsabores.data.ProductoCategoria
 import com.example.paseleriamilsabores.data.sampleProducto
+import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import java.util.*
+
+
 
 // Colores personalizados basados en el mockup (usando Material 3)
 val PastelPink = Color(0xFFF7A2BB) // Rosa pastel para el fondo
@@ -35,7 +39,9 @@ val CardPink = Color(0xFFFDE9EE) // Rosa muy claro para el fondo de las tarjetas
 // Composable principal de la pantalla de productos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosScreen() {
+fun ProductosScreen(carritoViewModel: CarritoViewModel) {
+
+
     // 1. Estado para la categoría seleccionada (filtrado)
     var seleccionCategoria by remember { mutableStateOf(ProductoCategoria.TODOS) } // <-- VARIABLE DE ESTADO
 
@@ -53,8 +59,6 @@ fun ProductosScreen() {
 
     Scaffold(
         // Barra inferior (replicando la navegación inferior del mockup)
-        bottomBar = { PasteleriaBottomBar() },
-        modifier = Modifier.fillMaxSize().background(PastelPink)
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -64,6 +68,8 @@ fun ProductosScreen() {
                 .systemBarsPadding(), // Manejo de barras del sistema
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
+
+
         ) {
             // --- Encabezado y Barra de Búsqueda ---
             item {
@@ -78,14 +84,28 @@ fun ProductosScreen() {
             item {
                 categoriaChipsRow(
                     seleccionCategoria = seleccionCategoria,
-                    onseleccionCategoria = { seleccionCategoria = it } // <-- CORRECCIÓN: Asigna el nuevo valor 'it'
+                    onseleccionCategoria = { seleccionCategoria = it }
                 )
             }
-
-            // --- Lista de Productos ---
             items(filtrar) { producto ->
-                ProductCard(producto = producto)
+
+                Column {
+                    ProductCard(producto = producto)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = { carritoViewModel.agregarProducto(producto) },
+                        colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Agregar al carrito", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
+
 
             // Espacio al final de la lista para el margen de la barra inferior
             item { Spacer(modifier = Modifier.height(60.dp)) }
@@ -120,15 +140,7 @@ fun HeaderSection() {
                 color = Color.DarkGray
             )
         }
-        // Icono de flecha de salida (Logout/Acceder)
-        Icon(
-            imageVector = Icons.Default.ArrowForward,
-            contentDescription = "Salir",
-            tint = BrightPink,
-            modifier = Modifier.size(28.dp).clickable {
-                // Lógica para ir a inicio de sesión/logout
-            }
-        )
+
     }
 }
 
@@ -149,7 +161,7 @@ fun SearchBar(
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = "Buscar", tint = BrightPink)
         },
-        // --- CORRECCIÓN: Usando TextFieldDefaults.colors() de Material 3 ---
+
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
@@ -262,44 +274,10 @@ fun ProductCard(producto: Producto) {
 }
 
 
-@Composable
-fun PasteleriaBottomBar() {
-    val items = listOf("Inicio", "Productos", "Carrito", "Envíos", "Pago")
-    val selectedItem = "Productos" // Simula que estamos en esta pantalla
-
-    NavigationBar(
-        containerColor = Color.White,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        items.forEach { item ->
-            val isSelected = item == selectedItem
-            NavigationBarItem(
-                icon = {
-                    // Icono de Material Design (reemplazar)
-                    Icon(
-                        painter = painterResource(id = android.R.drawable.ic_menu_help), // Reemplazar con iconos reales
-                        contentDescription = item,
-                        tint = if (isSelected) BrightPink else Color.Gray
-                    )
-                },
-                label = {
-                    Text(
-                        item,
-                        color = if (isSelected) BrightPink else Color.Gray
-                    )
-                },
-                selected = isSelected,
-                onClick = { /* Navegar a la pantalla correspondiente */ }
-            )
-        }
-    }
-}
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewProductosScreen() {
     MaterialTheme {
-        ProductosScreen()
+        ProductosScreen(carritoViewModel = viewModel())
     }
 }

@@ -36,7 +36,8 @@ private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("es", "CL")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CarritoScreen(navController: NavController, viewModel: CarritoViewModel = viewModel()) {
+fun CarritoScreen(navController: NavController, viewModel: CarritoViewModel
+) {
 
     val carritoItems by viewModel.carrito.collectAsState()
     val totalPagar by viewModel.totalPagar.collectAsState()
