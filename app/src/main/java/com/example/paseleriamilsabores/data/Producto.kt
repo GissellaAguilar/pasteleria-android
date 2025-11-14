@@ -13,9 +13,9 @@ enum class ProductoCategoria{
 data class Producto(
     val id: Int,
     val nombre: String,
-    val precio: Int,
+    val precio: Double,
     val descripcion: String,
-    val ImgProduct:Int,//url de la imagen
+    val ImgProduct:Int,
     val categoria: ProductoCategoria,
     //@DrawableRes val imagen: Int // @DrawableRes es para imágenes en tu app
 )
@@ -159,7 +159,7 @@ val sampleProducto= listOf(
     ),
     Producto(
         id=16,
-        nombre="orta Especial de Boda",
+        nombre="Torta Especial de Boda",
         descripcion = "Elegante y deliciosa, esta torta está diseñada para ser el centro de\n" +
                 "      atención en cualquier boda",
         precio = 60000,

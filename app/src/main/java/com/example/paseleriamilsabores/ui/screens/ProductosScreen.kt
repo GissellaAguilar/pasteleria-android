@@ -29,6 +29,8 @@ import com.example.paseleriamilsabores.data.sampleProducto
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import java.util.*
 
+
+
 // Colores personalizados basados en el mockup (usando Material 3)
 val PastelPink = Color(0xFFF7A2BB) // Rosa pastel para el fondo
 val BrightPink = Color(0xFFFF4081) // Rosa brillante para botones y acentos
@@ -138,15 +140,7 @@ fun HeaderSection() {
                 color = Color.DarkGray
             )
         }
-        // Icono de flecha de salida (Logout/Acceder)
-        Icon(
-            imageVector = Icons.Default.ArrowForward,
-            contentDescription = "Salir",
-            tint = BrightPink,
-            modifier = Modifier.size(28.dp).clickable {
-                // Lógica para ir a inicio de sesión/logout
-            }
-        )
+
     }
 }
 
@@ -167,7 +161,7 @@ fun SearchBar(
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = "Buscar", tint = BrightPink)
         },
-        // --- CORRECCIÓN: Usando TextFieldDefaults.colors() de Material 3 ---
+
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
@@ -279,40 +273,6 @@ fun ProductCard(producto: Producto) {
     }
 }
 
-
-@Composable
-fun PasteleriaBottomBar() {
-    val items = listOf("Inicio", "Productos", "Carrito", "Envíos", "Pago")
-    val selectedItem = "Productos" // Simula que estamos en esta pantalla
-
-    NavigationBar(
-        containerColor = Color.White,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        items.forEach { item ->
-            val isSelected = item == selectedItem
-            NavigationBarItem(
-                icon = {
-                    // Icono de Material Design (reemplazar)
-                    Icon(
-                        painter = painterResource(id = android.R.drawable.ic_menu_help), // Reemplazar con iconos reales
-                        contentDescription = item,
-                        tint = if (isSelected) BrightPink else Color.Gray
-                    )
-                },
-                label = {
-                    Text(
-                        item,
-                        color = if (isSelected) BrightPink else Color.Gray
-                    )
-                },
-                selected = isSelected,
-                onClick = { /* Navegar a la pantalla correspondiente */ }
-            )
-        }
-    }
-
-}
 
 @Preview(showBackground = true)
 @Composable
