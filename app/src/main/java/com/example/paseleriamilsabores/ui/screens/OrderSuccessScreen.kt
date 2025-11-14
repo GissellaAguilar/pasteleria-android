@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.compose.errorContainerLight
+import com.example.compose.onTertiaryContainerLight
 import com.example.paseleriamilsabores.data.ItemCarrito
 import com.example.paseleriamilsabores.data.Usuario
 
@@ -35,7 +36,8 @@ fun OrderSuccessScreen(
                 modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.errorContainer),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(16.dp)
+                    .fillMaxSize().background(color = errorContainerLight)) {
 
                     Text(
                         text = "✅ Compra realizada correctamente",
@@ -66,7 +68,7 @@ fun OrderSuccessScreen(
                         items(carrito) { item ->
                             Row(
                                 Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxWidth().background(color = MaterialTheme.colorScheme.errorContainer)
                                     .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
@@ -93,7 +95,7 @@ fun OrderSuccessScreen(
                         onClick = { navController.navigate("home") },
                         modifier = Modifier.align(Alignment.End),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
+                            containerColor = onTertiaryContainerLight,
                             contentColor = MaterialTheme.colorScheme.onSecondary)
                     ) {
                         Text("Volver al inicio" , style = MaterialTheme.typography.bodySmall)
