@@ -42,13 +42,21 @@ fun ProntoScreen(navController: NavController) {
             )
 
             Text(
-                text = "Funciones en desarrollo",
+                text = "Función en desarrollo",
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold
                 )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "¡Pronto más sorpresas!",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "Versión 1.40.9",
