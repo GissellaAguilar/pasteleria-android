@@ -9,12 +9,12 @@ import android.graphics.Canvas
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Phone
@@ -23,13 +23,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import com.example.paseleriamilsabores.R // NECESARIO para acceder a R.drawable.ic_store_pin
+import com.example.compose.backgroundLight
+import com.example.compose.errorContainerLight
+import com.example.compose.primaryContainerLight
+import com.example.paseleriamilsabores.R
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.mapbox.geojson.Point
@@ -41,7 +45,6 @@ import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import kotlinx.coroutines.tasks.await
-
 
 // Coordenadas de la tienda (Alameda 1588, Santiago)
 private val TIENDA_LAT = -33.44599
@@ -132,18 +135,15 @@ fun ContactoScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contáctanos") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                }
+                title = { Text("Contáctanos", style = MaterialTheme.typography.titleMedium) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = errorContainerLight)
             )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize().background(color = errorContainerLight)
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
@@ -159,29 +159,33 @@ fun ContactoScreen(navController: NavController) {
             Card(
                 modifier = Modifier
                     .widthIn(max = 500.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth().background(color = MaterialTheme.colorScheme.errorContainer),
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
+                        .background(color = backgroundLight),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    InfoRow(icon = Icons.Outlined.LocationOn, text = "📍 Alameda 1588, Santiago")
+                    InfoRow(icon = Icons.Outlined.LocationOn, text = "📍 Alameda 1588, Santiago",)
                     Spacer(Modifier.height(8.dp))
                     InfoRow(icon = Icons.Outlined.Phone, text = "📞 +569 45676798")
                     Spacer(Modifier.height(8.dp))
                     InfoRow(icon = Icons.Outlined.Email, text = "✉️ info@milsabores.cl")
 
                     Spacer(Modifier.height(16.dp))
-                    Text(locationMessage, style = MaterialTheme.typography.bodySmall)
+                    Text(locationMessage, style = MaterialTheme.typography.titleMedium)
 
                     // MapboxMap
                     MapboxMap(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
-                            .clip(RoundedCornerShape(12.dp)),
+                            .clip(RoundedCornerShape(12.dp))
+                        .background(color = backgroundLight),
                         mapViewportState = mapViewportState
                     ) {
                         // Carga de estilo y manejo de anotaciones (híbrido)
