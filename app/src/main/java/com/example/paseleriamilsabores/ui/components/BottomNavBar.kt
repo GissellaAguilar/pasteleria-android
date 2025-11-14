@@ -35,17 +35,10 @@ fun BottomNavBar(navController : NavController) {
                     popUpTo(AppScreens.Home.route)
                     launchSingleTop = true
                 }
-<<<<<<< Updated upstream
-            },
-            icon = { Icon(Icons.Default.List, contentDescription = "Productos") },
-            label = { Text("Productos") }
-=======
 
             },
             icon = { Icon(Icons.Default.List, contentDescription = "Productos") },
             label = { Text("Productos") }
-
->>>>>>> Stashed changes
         )
 
         NavigationBarItem(

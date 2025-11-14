@@ -27,11 +27,20 @@ import com.example.paseleriamilsabores.ui.screens.OrderSuccessScreen
 import com.example.paseleriamilsabores.ui.screens.ProductosScreen
 import com.example.paseleriamilsabores.ui.screens.ProntoScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val cartViewModel: CarritoViewModel = viewModel()
+
+
+
+
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
@@ -39,7 +48,34 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = AppScreens.Home.route,
-            modifier = Modifier.padding(innerPadding) 
+            modifier = Modifier.padding(innerPadding)
+            /*
+            navController = navController,
+            startDestination = AppScreens.Home.route,
+            modifier = Modifier.padding(innerPadding) ,
+
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = {it},
+                    animationSpec = tween(300)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            },
+
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            }
+
+
+            */
         ) {
             composable(AppScreens.Home.route) { HomeScreen(navController) }
             composable(AppScreens.Registro.route) { /* RegistroScreen(navController) */ }

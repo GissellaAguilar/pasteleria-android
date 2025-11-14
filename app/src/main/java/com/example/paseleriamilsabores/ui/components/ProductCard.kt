@@ -11,16 +11,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-<<<<<<< Updated upstream
 import com.example.paseleriamilsabores.data.Producto
-=======
 import com.example.paseleriamilsabores.data.ItemCarrito
-import com.example.paseleriamilsabores.model.Producto
 import com.example.paseleriamilsabores.ui.screens.BrightPink
->>>>>>> Stashed changes
+
 
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
+    val precioFormateado = "$${producto.precio.toInt()}"
+
     Card(
         modifier = modifier
             .height(240.dp)
@@ -55,32 +54,18 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            /*
-            // 💰 Precio destacado con el color primario
+
             Text(
-                text = producto.precio,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier.padding(top = 4.dp)
+                text = precioFormateado,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
-<<<<<<< Updated upstream
-
-             */
-=======
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // --- BOTÓN AGREGAR ---
-            Button(
-                onClick = { ItemCarrito.(producto) },
-                colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Agregar", color = Color.White, fontWeight = FontWeight.Bold)
-            }
 
 
->>>>>>> Stashed changes
+
+
+
+
         }
     }
 }
