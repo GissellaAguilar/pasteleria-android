@@ -18,6 +18,8 @@ import com.example.paseleriamilsabores.ui.screens.BrightPink
 
 @Composable
 fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
+    val precioFormateado = "$${producto.precio.toInt()}"
+
     Card(
         modifier = modifier
             .height(240.dp)
@@ -52,19 +54,18 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            /*
-            // 💰 Precio destacado con el color primario
+
             Text(
-                text = producto.precio,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier.padding(top = 4.dp)
+                text = precioFormateado,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
-             */
+
 
             Spacer(modifier = Modifier.height(8.dp))
+
+
 
         }
     }

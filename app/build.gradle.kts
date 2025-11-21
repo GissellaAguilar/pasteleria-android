@@ -63,6 +63,10 @@ android {
 }
 
 dependencies {
+
+    
+    implementation("androidx.compose.material:material-icons-extended:<version>")
+
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
