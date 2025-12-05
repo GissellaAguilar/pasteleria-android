@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.ui.components.CarouselSection
 import com.example.paseleriamilsabores.ui.components.ProductGrid
-
+import androidx.compose.ui.Alignment
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -85,9 +85,13 @@ fun HomeScreen(navController: NavController) {
                     modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
             }
+
         }
+
     ) { padding ->
+
 
         LazyColumn(
             modifier = Modifier
@@ -96,6 +100,7 @@ fun HomeScreen(navController: NavController) {
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
         ) {
+
             item {
                 CarouselSection()
                 Spacer(modifier = Modifier.height(16.dp))
