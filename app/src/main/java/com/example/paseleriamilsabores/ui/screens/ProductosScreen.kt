@@ -1,5 +1,6 @@
 package com.example.paseleriamilsabores.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +43,7 @@ val BrightPink = Color(0xFFFF4081) // Rosa brillante para botones y acentos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductosScreen(carritoViewModel: CarritoViewModel) {
+    val context = LocalContext.current
 
 
     // 1. Estado para la categoría seleccionada (filtrado)
@@ -73,9 +76,11 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
 
         ) {
             // --- Encabezado y Barra de Búsqueda ---
+           /*
             item {
                 HeaderSection()
             }
+            */
 
             item {
                 SearchBar(searchText, onSearchTextChanged = { searchText = it })
@@ -96,8 +101,12 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        onClick = { carritoViewModel.agregarProducto(producto) },
-                        colors = ButtonDefaults.buttonColors(containerColor = onTertiaryContainerLight),
+                        onClick = {
+                            carritoViewModel.agregarProducto(producto)
+                            Toast.makeText(context, "${producto.nombre} agregado al carrito", Toast.LENGTH_SHORT).show()
+
+                                  },
+                        colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Agregar al carrito", color = Color.White)
@@ -106,13 +115,14 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+
         }
     }
 }
 // ------------------------------------------
 // COMPONENTES REUTILIZABLES DE LA PANTALLA
 // ------------------------------------------
-
+/*
 @Composable
 fun HeaderSection() {
     Row(
@@ -135,7 +145,7 @@ fun HeaderSection() {
 
     }
 }
-
+*/
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
@@ -207,6 +217,7 @@ fun categoriaChipsRow(
 
 @Composable
 fun ProductCard(producto: Producto) {
+    val precioFormateado = "$${producto.precio.toInt()}"
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -253,7 +264,7 @@ fun ProductCard(producto: Producto) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Precio: $${producto.precio}",
+                    text = precioFormateado,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = BrightPink

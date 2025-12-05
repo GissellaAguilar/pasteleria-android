@@ -63,6 +63,23 @@ android {
 }
 
 dependencies {
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+
+    // Activity Compose
+    implementation("androidx.activity:activity-compose:1.9.0")
+    
+    implementation("androidx.compose.material:material-icons-extended:<version>")
+
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))

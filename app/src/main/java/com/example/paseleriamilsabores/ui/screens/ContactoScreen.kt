@@ -47,8 +47,8 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import kotlinx.coroutines.tasks.await
 
 // Coordenadas de la tienda (Alameda 1588, Santiago)
-private val TIENDA_LAT = -33.44599
-private val TIENDA_LNG = -70.65810
+private val TIENDA_LAT = -33.46531032154523
+private val TIENDA_LNG = -70.67322997477157
 private val TIENDA_POINT = Point.fromLngLat(TIENDA_LNG, TIENDA_LAT)
 
 
@@ -68,7 +68,7 @@ fun ContactoScreen(navController: NavController) {
 
     // Cargar el ícono de tienda como Bitmap (solo se hace una vez)
     val storeBitmap: Bitmap? = remember {
-        bitmapFromResource(contexto, R.drawable.ic_store_pin)
+        bitmapFromResource(contexto, R.drawable.casa)
     }
 
     var userLocation by remember { mutableStateOf<Pair<Double, Double>?>(null) }
