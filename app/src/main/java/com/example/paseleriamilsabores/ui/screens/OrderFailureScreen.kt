@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import com.example.compose.errorContainerLight
 import com.example.compose.onTertiaryContainerLight
 import com.example.paseleriamilsabores.data.ItemCarrito
-import com.example.paseleriamilsabores.data.Usuario
+import com.example.paseleriamilsabores.model.Usuario
 
 @Composable
 fun OrderFailureScreen(

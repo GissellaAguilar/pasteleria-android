@@ -32,80 +32,89 @@ import com.example.compose.inversePrimaryLightMediumContrast
 import com.example.compose.onBackgroundLight
 import com.example.compose.onTertiaryContainerLight
 import com.example.compose.secondaryContainerDarkMediumContrast
-import com.example.paseleriamilsabores.data.Producto
-import com.example.paseleriamilsabores.data.ProductoCategoria
-import com.example.paseleriamilsabores.data.sampleProducto
+import com.example.paseleriamilsabores.model.Producto
+import com.example.paseleriamilsabores.model.ProductoCategoria
+
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.viewmodel.ProductoViewModel
 import java.util.*
 
 
 val BrightPink = Color(0xFFFF4081) // Rosa brillante para botones y acentos
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosScreen(carritoViewModel: CarritoViewModel) {
+fun ProductosScreen(
+    carritoViewModel: CarritoViewModel,
+    productoViewModel: ProductoViewModel = viewModel()
+) {
     val context = LocalContext.current
 
+    // Obtiene productos desde el ViewModel
+    val productos by productoViewModel.productos.collectAsState()
 
-    // 1. Estado para la categoría seleccionada (filtrado)
-    var seleccionCategoria by remember { mutableStateOf(ProductoCategoria.TODOS) } // <-- VARIABLE DE ESTADO
+    // Estado categoría seleccionada
+    var seleccionCategoria by remember { mutableStateOf(ProductoCategoria.TODOS) }
 
-    // 2. Estado para el texto de búsqueda (UI)
+    // Estado de búsqueda
     var searchText by remember { mutableStateOf("") }
 
-    // 3. Obtener la lista de productos filtrada
-    val filtrar= remember(seleccionCategoria) {
-        if (seleccionCategoria == ProductoCategoria.TODOS) {
-            sampleProducto
-        } else {
-            sampleProducto.filter { it.categoria == seleccionCategoria}
-        }
+    // Filtrar productos por categoría + búsqueda
+    val productosFiltrados = productos.filter { producto ->
+        val coincideCategoria =
+            seleccionCategoria == ProductoCategoria.TODOS ||
+                    producto.categoria.toString().equals(seleccionCategoria.name, ignoreCase = true)
+
+        val coincideBusqueda =
+            searchText.isEmpty() || producto.nombre.contains(searchText, ignoreCase = true)
+
+        coincideCategoria && coincideBusqueda
     }
 
-    Scaffold(
-
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(errorContainerLight)
-                .systemBarsPadding(), // Manejo de barras del sistema
+                .systemBarsPadding(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-
-
         ) {
-            // --- Encabezado y Barra de Búsqueda ---
-           /*
-            item {
-                HeaderSection()
-            }
-            */
 
+            // Barra de búsqueda
             item {
-                SearchBar(searchText, onSearchTextChanged = { searchText = it })
+                SearchBar(
+                    searchText = searchText,
+                    onSearchTextChanged = { searchText = it }
+                )
             }
 
-            // --- Fila de Chips de Categoría (Filtros) ---
+            // Chips categorías
             item {
                 categoriaChipsRow(
                     seleccionCategoria = seleccionCategoria,
                     onseleccionCategoria = { seleccionCategoria = it }
                 )
             }
-            items(filtrar) { producto ->
 
+            // Lista de productos
+            items(productosFiltrados) { producto ->
                 Column {
-                    ProductCard(producto = producto)
+
+                    ProductCard(producto)
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
                         onClick = {
                             carritoViewModel.agregarProducto(producto)
-                            Toast.makeText(context, "${producto.nombre} agregado al carrito", Toast.LENGTH_SHORT).show()
-
-                                  },
+                            Toast.makeText(
+                                context,
+                                "${producto.nombre} agregado al carrito",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = BrightPink),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -115,15 +124,25 @@ fun ProductosScreen(carritoViewModel: CarritoViewModel) {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-
         }
     }
 }
+
 // ------------------------------------------
 // COMPONENTES REUTILIZABLES DE LA PANTALLA
 // ------------------------------------------
 /*
-@Composable
+
+val productosFiltrados = productos.filter { producto ->
+    val coincideCategoria =
+        seleccionCategoria == ProductoCategoria.TODOS ||
+                producto.categoria.toString().equals(seleccionCategoria.name, ignoreCase = true)
+
+    val coincideBusqueda =
+        searchText.isEmpty() || producto.nombre.contains(searchText, ignoreCase = true)
+
+    coincideCategoria && coincideBusqueda
+}@Composable
 fun HeaderSection() {
     Row(
         modifier = Modifier
@@ -235,7 +254,7 @@ fun ProductCard(producto: Producto) {
         ) {
 
             AsyncImage(
-                model = producto.ImgProduct,
+                model = producto.img,
                 contentDescription = producto.nombre,
                 modifier = Modifier
                     .size(100.dp)

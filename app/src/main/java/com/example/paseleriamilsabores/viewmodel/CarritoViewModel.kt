@@ -4,8 +4,8 @@ import android.content.ClipData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.paseleriamilsabores.data.ItemCarrito
-import com.example.paseleriamilsabores.data.Producto
-import com.example.paseleriamilsabores.data.Usuario
+import com.example.paseleriamilsabores.model.Producto
+import com.example.paseleriamilsabores.model.Usuario
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

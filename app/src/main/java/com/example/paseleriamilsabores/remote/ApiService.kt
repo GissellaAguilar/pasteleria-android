@@ -14,7 +14,7 @@ package com.example.paseleriamilsabores.remote
 
         // POST: /api/usuario
         @POST("/api/usuario")
-        suspend fun createUsuario(@Body usuario: Usuario): Usuario
+        suspend fun crearUsuario(@Body usuario: Usuario): Usuario
 
         // GET: /api/usuario/{run}
         @GET("/api/usuario/{run}")
@@ -46,7 +46,7 @@ package com.example.paseleriamilsabores.remote
 
         // GET: /api/productos
         @GET("/api/productos")
-        suspend fun getAllProductos(): List<Producto>
+        suspend fun getAllProductos(): List<ProductoRemote>
 
         // GET: /api/productos/categoria/{categoria}
         @GET("/api/productos/categoria/{categoria}")
