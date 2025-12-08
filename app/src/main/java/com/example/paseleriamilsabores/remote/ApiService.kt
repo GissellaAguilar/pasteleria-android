@@ -4,6 +4,7 @@ package com.example.paseleriamilsabores.remote
     import com.example.paseleriamilsabores.model.Pedido
     import com.example.paseleriamilsabores.model.Producto
     import com.example.paseleriamilsabores.model.Usuario
+    import retrofit2.Response
     import retrofit2.http.*
 
     interface ApiService {
@@ -74,22 +75,22 @@ package com.example.paseleriamilsabores.remote
 
         // POST: /api/pedido
         @POST("/api/pedido")
-        suspend fun crearPedido(@Body pedido: Pedido): Pedido
+        suspend fun crearPedido(@Body pedido: Pedido): Response<Pedido>
 
         // GET: /api/pedido/{idPedido}
         @GET("/api/pedido/{idPedido}")
-        suspend fun obtenerPedidoPorId(@Path("idPedido") id: Long): Pedido
+        suspend fun obtenerPedidoPorId(@Path("idPedido") id: Long): Response<Pedido>
 
         // PUT: /api/pedido/{idPedido}
         @PUT("/api/pedido/{idPedido}")
         suspend fun actualizarPedido(
             @Path("idPedido") id: Long,
             @Body pedido: Pedido
-        ): Pedido
+        ): Response<Pedido>
 
         // DELETE: /api/pedido/{idPedido}
         @DELETE("/api/pedido/{idPedido}")
-        suspend fun eliminarPedido(@Path("idPedido") id: Long): Unit
+        suspend fun eliminarPedido(@Path("idPedido") id: Long): Response<Unit>
 
 
         // =================================================================
@@ -98,24 +99,24 @@ package com.example.paseleriamilsabores.remote
 
         // POST: /api/detalles-pedido
         @POST("/api/detalles-pedido")
-        suspend fun crearDetallePedido(@Body detalle: DetallePedido): DetallePedido
+        suspend fun crearDetallePedido(@Body detalle: DetallePedido): Response<DetallePedido>
 
         // GET: /api/detalles-pedido
         @GET("/api/detalles-pedido")
-        suspend fun obtenerTodosLosDetalles(): List<DetallePedido>
+        suspend fun obtenerTodosLosDetalles(): Response<List<DetallePedido>>
 
         // GET: /api/detalles-pedido/{id}
         @GET("/api/detalles-pedido/{id}")
-        suspend fun obtenerDetallePorId(@Path("id") id: Long): DetallePedido
+        suspend fun obtenerDetallePorId(@Path("id") id: Long): Response<DetallePedido>
 
         // PUT: /api/detalles-pedido/{id}
         @PUT("/api/detalles-pedido/{id}")
         suspend fun actualizarDetallePedido(
             @Path("id") id: Long,
             @Body detalle: DetallePedido
-        ): DetallePedido
+        ): Response<DetallePedido>
 
         // DELETE: /api/detalles-pedido/{id}
         @DELETE("/api/detalles-pedido/{id}")
-        suspend fun eliminarDetallePedido(@Path("id") id: Long): Unit
+        suspend fun eliminarDetallePedido(@Path("id") id: Long): Response<Unit>
     }

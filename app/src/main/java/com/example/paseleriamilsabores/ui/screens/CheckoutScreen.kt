@@ -186,11 +186,8 @@ fun CheckoutScreen(
                                         direccion = direccion,
                                         region = region,
                                         comuna = comuna,
-                                        run = "",
-                                        password = "",
                                         codigo = "",
-                                        rol = "",
-                                        fechaNac = ""
+                                        rol = ""
                                     )
 
                                     val exito = viewModel.realizarPago(usuarioParaPago)
