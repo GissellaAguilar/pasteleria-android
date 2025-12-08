@@ -11,8 +11,6 @@ object RetrofitInstance {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            // Nota: Si usas 'suspend' debes añadir la dependencia de coroutines,
-            // pero con versiones recientes de Retrofit y Kotlin, suele funcionar sin un adapter explícito.
             .build()
     }
 

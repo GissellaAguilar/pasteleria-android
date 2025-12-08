@@ -1,9 +1,9 @@
 package com.example.paseleriamilsabores.model
 
-class Usuario(
+data class Usuario(
     val run: String,
     val nombre: String,
-    val apellido: String,
+    val apellidos: String,
     val correo: String,
     val password: String,
     val direccion: String,
