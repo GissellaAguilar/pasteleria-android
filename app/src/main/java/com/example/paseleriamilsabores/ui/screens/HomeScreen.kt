@@ -19,6 +19,12 @@ import androidx.navigation.NavController
 import com.example.paseleriamilsabores.ui.components.CarouselSection
 import com.example.paseleriamilsabores.ui.components.ProductGrid
 import androidx.compose.ui.Alignment
+
+
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.paseleriamilsabores.viewmodel.ProductoViewModel
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -29,6 +35,10 @@ fun HomeScreen(navController: NavController) {
     // Estados del SearchBar
     var query by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val productoViewModel: ProductoViewModel = viewModel()
+    val productosBackend by productoViewModel.productos.collectAsState()
+
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -107,7 +117,7 @@ fun HomeScreen(navController: NavController) {
             }
 
             item {
-                ProductGrid()
+                ProductGrid(productos = productosBackend)
             }
         }
     }

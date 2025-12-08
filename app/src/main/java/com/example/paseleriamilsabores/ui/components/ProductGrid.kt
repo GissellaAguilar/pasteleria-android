@@ -6,13 +6,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.paseleriamilsabores.data.Producto
-import com.example.paseleriamilsabores.data.sampleProducto
+import com.example.paseleriamilsabores.model.Producto
+
 
 @Composable
-fun ProductGrid() {
-
-    val productos = sampleProducto.take(6)
+fun ProductGrid(productos: List<Producto>) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -33,4 +31,5 @@ fun ProductGrid() {
         }
     }
 }
+
 

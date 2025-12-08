@@ -1,4 +1,10 @@
 package com.example.paseleriamilsabores.model
 
-class Producto {
-}
+data class Producto(
+    val id: Int,
+    val nombre: String,
+    val precio: Double,
+    val descripcion: String,
+    val img: Int,
+    val categoria: ProductoCategoria
+)
