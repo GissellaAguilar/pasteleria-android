@@ -12,7 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.compose.errorContainerLight
-import com.example.paseleriamilsabores.data.Usuario
+import com.example.paseleriamilsabores.model.Usuario
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
 import kotlinx.coroutines.launch
 
@@ -176,7 +176,12 @@ fun CheckoutScreen(
                                         correo = correo,
                                         direccion = direccion,
                                         region = region,
-                                        comuna = comuna
+                                        comuna = comuna,
+                                        run = "",
+                                        password = "",
+                                        codigo = "",
+                                        rol = "",
+                                        fechaNac = ""
                                     )
 
                                     val exito = viewModel.realizarPago(usuarioActual)
