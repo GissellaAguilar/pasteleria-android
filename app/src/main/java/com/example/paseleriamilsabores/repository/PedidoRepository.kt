@@ -1,7 +1,7 @@
 package com.example.paseleriamilsabores.repository
 
 import com.example.paseleriamilsabores.model.Pedido
-import com.example.paseleriamilsabores.model.Usuario
+import retrofit2.Response
 import com.example.paseleriamilsabores.remote.ApiService
 
 class PedidoRepository(private val apiService: ApiService) {

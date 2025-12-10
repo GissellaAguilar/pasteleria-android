@@ -11,7 +11,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.paseleriamilsabores.data.Producto
+import com.example.paseleriamilsabores.model.Producto
 import com.example.paseleriamilsabores.data.ItemCarrito
 import com.example.paseleriamilsabores.ui.screens.BrightPink
 
@@ -37,7 +37,7 @@ fun ProductCard(producto: Producto, modifier: Modifier = Modifier) {
         ) {
             // 🖼️ Imagen local desde drawable
             Image(
-                painter = painterResource(id = producto.ImgProduct),
+                painter = painterResource(id = producto.img),
                 contentDescription = producto.nombre,
                 modifier = Modifier
                     .fillMaxWidth()

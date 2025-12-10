@@ -170,21 +170,27 @@ fun CheckoutScreen(
                         Button(
                             onClick = {
                                 scope.launch {
-                                    val usuarioActual = Usuario(
+                                    val usuarioParaPago = usuarioRegistrado?.copy(
+                                        nombre = nombre,
+                                        apellidos = apellidos,
+                                        correo = correo,
+                                        direccion = direccion,region = region,
+                                        comuna = comuna
+                                    ) ?: Usuario(
+                                        run = "",
+                                        password = "",
+                                        fechaNac = "",
                                         nombre = nombre,
                                         apellidos = apellidos,
                                         correo = correo,
                                         direccion = direccion,
                                         region = region,
                                         comuna = comuna,
-                                        run = "",
-                                        password = "",
                                         codigo = "",
-                                        rol = "",
-                                        fechaNac = ""
+                                        rol = ""
                                     )
 
-                                    val exito = viewModel.realizarPago(usuarioActual)
+                                    val exito = viewModel.realizarPago(usuarioParaPago)
                                     val codigoOrden = viewModel.ultimoCodigoOrden ?: "N/A"
 
                                     if (exito) onCompraExitosa(codigoOrden)
