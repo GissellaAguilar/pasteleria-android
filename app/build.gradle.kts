@@ -1,4 +1,5 @@
 import java.util.Properties
+
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -13,12 +14,16 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
 }
+
 android {
     namespace = "com.example.paseleriamilsabores"
     compileSdk = 36
+
     buildFeatures {
         buildConfig = true
+        compose = true
     }
+
     defaultConfig {
         applicationId = "com.example.paseleriamilsabores"
         minSdk = 24
@@ -27,7 +32,6 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-// Configuración para acceder al token de Mapbox en el código Kotlin
         buildConfigField(
             "String",
             "MAPBOX_PUBLIC_TOKEN",
@@ -52,37 +56,49 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-    }
+
+    // --- ACTIVAR JUNIT 5 PARA TEST UNITARIOS ---
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
         }
+        unitTests.isIncludeAndroidResources = true
     }
+
+
 }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 
 dependencies {
 
-// Retrofit
+    // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-// Coroutines
+
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-// ViewModel utilities for Compose
+    // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
 
-// Activity Compose
+    // Activity Compose
     implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.compose.material:material-icons-extended:<version>")
+
+    // Íconos extendidos (corregido)
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Firebase (BOM)
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
-// --- Fundamentales de Compose (Usando BOM para versiones) ---
+    // Compose Core + BOM
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -91,18 +107,22 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-// --- 1. Navegación (SOLUCIÓN al error de import) ---
-// Usamos la dependencia explícita en lugar de 'libs.androidx.navigation.compose'
+
+    // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.7.0")
-// --- 2. Geolocalización (FusedLocationProviderClient de Google) ---
+
+    // Geolocalización
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
-// --- 3. Mapbox (SOLUCIÓN al error de import, usando las librerías estándar) ---
+
+    // Mapbox
     implementation("com.mapbox.maps:android:11.16.2")
     implementation("com.mapbox.extension:maps-compose:11.16.2")
-// --- 4. Fuentes de Google ---
+
+    // Google Fonts
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
-// --- 5. Persistencia JSON (Gson) ---
+
+    // Gson
     implementation("com.google.code.gson:gson:2.10.1")
 
 // --- Testing ---
@@ -120,11 +140,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     testImplementation(kotlin("test"))
 
-}
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

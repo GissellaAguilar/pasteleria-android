@@ -36,11 +36,8 @@ class CarritoViewModel : ViewModel() {
         viewModelScope.launch {
             _carrito.collect { items ->
                 _totalPagar.value = items.sumOf { it.subtotal }
-
             }
-
         }
-
     }
 
     fun agregarProducto(producto: Producto) {
