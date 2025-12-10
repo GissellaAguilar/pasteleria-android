@@ -57,12 +57,10 @@ android {
         jvmTarget = "11"
     }
 
-    // --- ACTIVAR JUNIT 5 PARA TEST UNITARIOS ---
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
         }
-        unitTests.isIncludeAndroidResources = true
     }
 
 
