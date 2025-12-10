@@ -1,18 +1,25 @@
 package com.example.paseleriamilsabores.ui.screens
 
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 import com.example.paseleriamilsabores.navigation.AppScreens
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,6 +28,18 @@ fun PerfilScreen(
     loginViewModel: LoginViewModel
 ) {
     val usuario by loginViewModel.usuarioLogeado.collectAsState()
+
+    // FOTO TOMADA CON LA CÁMARA
+    var fotoPerfil by remember { mutableStateOf<Bitmap?>(null) }
+
+    // Launcher de cámara (nativo)
+    val launcherCamera = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            fotoPerfil = bitmap
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -38,19 +57,35 @@ fun PerfilScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // FOTO / ICONO
-            Surface(
+            // FOTO PERFIL (editable)
+            Box(
                 modifier = Modifier
-                    .size(110.dp)
-                    .clip(CircleShape),
-                color = MaterialTheme.colorScheme.primaryContainer
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .clickable { launcherCamera.launch() }, // 👍 toca la foto para cambiarla
+                contentAlignment = Alignment.Center
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = usuario?.nombre?.firstOrNull()?.uppercase() ?: "?",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+
+                if (fotoPerfil != null) {
+                    Image(
+                        bitmap = fotoPerfil!!.asImageBitmap(),
+                        contentDescription = "Foto de perfil",
+                        modifier = Modifier.fillMaxSize()
                     )
+                } else {
+                    // CÍRCULO CON INICIAL SI NO HAY FOTO
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.primaryContainer
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = usuario?.nombre?.firstOrNull()?.uppercase() ?: "?",
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
 
@@ -75,10 +110,8 @@ fun PerfilScreen(
             // CARD DATOS PERSONALES
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-                ),
-                elevation = CardDefaults.cardElevation(4.dp)
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest)
             ) {
                 Column(Modifier.padding(16.dp)) {
 
@@ -87,13 +120,14 @@ fun PerfilScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
+
                     Spacer(Modifier.height(12.dp))
 
                     PerfilDato("RUN / RUT", usuario?.run)
+                    PerfilDato("Correo", usuario?.correo)
                     PerfilDato("Dirección", usuario?.direccion)
                     PerfilDato("Comuna", usuario?.comuna)
                     PerfilDato("Región", usuario?.region)
-                    PerfilDato("Fecha de nacimiento", usuario?.correo)
                 }
             }
 

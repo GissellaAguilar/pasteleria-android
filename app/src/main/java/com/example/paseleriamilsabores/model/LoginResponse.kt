@@ -9,5 +9,5 @@ data class LoginResponse(
     val correo: String,
     val direccion: String,
     val region: String,
-    val comuna: String
+    val comuna: String,
 )
