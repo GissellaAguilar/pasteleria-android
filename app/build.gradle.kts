@@ -104,6 +104,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
 // --- 5. Persistencia JSON (Gson) ---
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.androidx.compose.runtime)
 
 // --- Testing ---
     testImplementation("junit:junit:4.13.2")

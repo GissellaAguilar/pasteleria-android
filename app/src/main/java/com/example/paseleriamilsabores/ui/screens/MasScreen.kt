@@ -30,6 +30,8 @@ fun MasScreen(
 ) {
 
     val usuarioLogeado by viewModel.usuarioLogeado.collectAsState()
+    val usuario = viewModel.usuarioLogeado.collectAsState().value
+
 
     val isUserLoggedIn = usuarioLogeado != null
     val userName = if (isUserLoggedIn) {
@@ -97,15 +99,25 @@ fun MasScreen(
                 navController.navigate(AppScreens.Nosotros.route)
             }
 
+
             if (isUserLoggedIn) {
                 OpcionItem("Cerrar sesión", Icons.Default.ExitToApp) {
                     viewModel.logout()
                     navController.navigate(AppScreens.Login.route)
                 }
             }
+
+            if (usuario?.rol == "ADMIN") {
+                OpcionItem("Panel Administrador", Icons.Default.Badge
+                ) {
+                    navController.navigate(AppScreens.Admin.route)
+                }
+            }
         }
     }
 }
+
+
 
 
 
