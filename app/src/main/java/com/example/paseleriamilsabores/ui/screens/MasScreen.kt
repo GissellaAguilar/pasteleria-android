@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,29 +18,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.navigation.AppScreens
-import com.google.firebase.auth.FirebaseAuth
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasScreen(navController: NavController) {
+fun MasScreen(
+    navController: NavController,
+    viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
 
-    var user by remember { mutableStateOf(FirebaseAuth.getInstance().currentUser) }
+    val usuarioLogeado by viewModel.usuarioLogeado.collectAsState()
 
-        DisposableEffect(Unit) {
-        val listener = FirebaseAuth.AuthStateListener {
-            user = it.currentUser
-        }
-        FirebaseAuth.getInstance().addAuthStateListener(listener)
-
-        onDispose {
-            FirebaseAuth.getInstance().removeAuthStateListener(listener)
-        }
+    val isUserLoggedIn = usuarioLogeado != null
+    val userName = if (isUserLoggedIn) {
+        "Hola ${usuarioLogeado!!.nombre}"
+    } else {
+        "Iniciar sesión"
     }
-
-    val isUserLoggedIn = user != null
-    val userName = user?.displayName ?: "Inicia sesión"
 
     Scaffold(
         topBar = {
@@ -88,7 +85,6 @@ fun MasScreen(navController: NavController) {
                 navController.navigate(AppScreens.Contacto.route)
             }
 
-
             OpcionItem("Cupones", Icons.Default.Build) {
                 navController.navigate(AppScreens.Pronto.route)
             }
@@ -103,13 +99,14 @@ fun MasScreen(navController: NavController) {
 
             if (isUserLoggedIn) {
                 OpcionItem("Cerrar sesión", Icons.Default.ExitToApp) {
-                    FirebaseAuth.getInstance().signOut()
+                    viewModel.logout()
                     navController.navigate(AppScreens.Login.route)
                 }
             }
         }
     }
 }
+
 
 
 @Composable
