@@ -11,18 +11,40 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.navigation.AppScreens
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
-    val auth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
-    var email by remember { mutableStateOf("") }
+    var run by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+
+    val usuarioLogeado by viewModel.usuarioLogeado.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    // Si el login fue exitoso → Navegar
+    LaunchedEffect(usuarioLogeado) {
+        if (usuarioLogeado != null) {
+            Toast.makeText(context, "Ingreso exitoso 🎉", Toast.LENGTH_SHORT).show()
+
+            navController.currentBackStackEntry?.savedStateHandle?.set("usuarioRegistrado", usuarioLogeado)
+
+            navController.navigate(AppScreens.Home.route) {
+                popUpTo(AppScreens.Login.route) { inclusive = true }
+            }
+        }
+    }
+
+    // Si hubo error → mostrar Toast
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        }
+    }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Iniciar sesión") }) }
@@ -36,17 +58,17 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // 📨 Email
+            // RUN
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
+                value = run,
+                onValueChange = { run = it },
+                label = { Text("RUN (sin guion)") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(16.dp))
 
-            // 🔑 Password
+            // Password
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -57,53 +79,26 @@ fun LoginScreen(navController: NavController) {
 
             Spacer(Modifier.height(24.dp))
 
-            // 🔘 Botón iniciar sesión
+            // Login
             Button(
                 onClick = {
-                    if (email.isBlank() || password.isBlank()) {
-                        Toast.makeText(context, "Ingresa email y contraseña", Toast.LENGTH_SHORT).show()
+                    if (run.isBlank() || password.isBlank()) {
+                        Toast.makeText(context, "Ingresa RUN y contraseña", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
-
-                    isLoading = true
-
-                    auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            isLoading = false
-
-                            if (task.isSuccessful) {
-                                Toast.makeText(context, "Ingreso exitoso 🎉", Toast.LENGTH_SHORT).show()
-
-                                navController.navigate(AppScreens.Home.route) {
-                                    popUpTo(AppScreens.Login.route) { inclusive = true }
-                                }
-
-                            } else {
-                                Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
+                    viewModel.login(run, password)
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                enabled = !isLoading
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    Text("Iniciar sesión")
-                }
+                Text("Iniciar sesión")
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Registrar
             TextButton(onClick = { navController.navigate(AppScreens.Registro.route) }) {
                 Text("¿No tienes cuenta? Regístrate")
             }
         }
     }
 }
+
