@@ -33,11 +33,14 @@ class CarritoViewModel : ViewModel() {
     var usuarioActual: Usuario? = null
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch (dispatcher){
             _carrito.collect { items ->
                 _totalPagar.value = items.sumOf { it.subtotal }
+
             }
+
         }
+
     }
 
     fun agregarProducto(producto: Producto) {
@@ -78,7 +81,6 @@ class CarritoViewModel : ViewModel() {
                 )
             } else item
         }
-    }
 
     // ✅ ELIMINAR PRODUCTO
     fun eliminarProducto(idProducto: Int) {
@@ -140,4 +142,5 @@ class CarritoViewModel : ViewModel() {
             }
         }
     }
+
 }
