@@ -22,6 +22,8 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = androi
 
     var run by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
+
 
     val usuarioLogeado by viewModel.usuarioLogeado.collectAsState()
     val error by viewModel.error.collectAsState()
@@ -31,13 +33,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = androi
         if (usuarioLogeado != null) {
             Toast.makeText(context, "Ingreso exitoso 🎉", Toast.LENGTH_SHORT).show()
 
-            navController.currentBackStackEntry?.savedStateHandle?.set("usuarioRegistrado", usuarioLogeado)
-
             navController.navigate(AppScreens.Home.route) {
                 popUpTo(AppScreens.Login.route) { inclusive = true }
             }
         }
     }
+
 
     // Si hubo error → mostrar Toast
     LaunchedEffect(error) {
@@ -60,11 +61,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = androi
 
             // RUN
             OutlinedTextField(
-                value = run,
-                onValueChange = { run = it },
-                label = { Text("RUN (sin guion)") },
+                value = correo,
+                onValueChange = { correo = it },
+                label = { Text("Correo") },
                 modifier = Modifier.fillMaxWidth()
             )
+
 
             Spacer(Modifier.height(16.dp))
 
@@ -82,11 +84,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = androi
             // Login
             Button(
                 onClick = {
-                    if (run.isBlank() || password.isBlank()) {
-                        Toast.makeText(context, "Ingresa RUN y contraseña", Toast.LENGTH_SHORT).show()
+                    if (correo.isBlank() || password.isBlank()) {
+                        Toast.makeText(context, "Ingresa correo y contraseña", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
-                    viewModel.login(run, password)
+                    viewModel.login(correo, password)
                 },
                 modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {

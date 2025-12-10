@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.model.Usuario
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,12 +20,15 @@ import kotlinx.coroutines.launch
 fun CheckoutScreen(
     navController: NavController,
     viewModel: CarritoViewModel,
+    loginViewModel: LoginViewModel,
     onCompraExitosa: (String?) -> Unit,
     onCompraFallida: (String?) -> Unit
 ) {
     val carrito by viewModel.carrito.collectAsState()
     val totalPagar by viewModel.totalPagar.collectAsState()
     val scope = rememberCoroutineScope()
+    val usuarioLogeado by loginViewModel.usuarioLogeado.collectAsState()
+
 
     // Estado del formulario
     var nombre by remember { mutableStateOf("") }
@@ -34,6 +38,18 @@ fun CheckoutScreen(
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
     var run by remember { mutableStateOf("") }
+
+    LaunchedEffect(usuarioLogeado) {
+        usuarioLogeado?.let { user ->
+            nombre = user.nombre ?: ""
+            apellidos = user.apellidos ?: ""
+            correo = user.correo ?: ""
+            direccion = user.direccion ?: ""
+            region = user.region ?: ""
+            comuna = user.comuna ?: ""
+            run = user.run ?: ""
+        }
+    }
 
 
     Scaffold(
