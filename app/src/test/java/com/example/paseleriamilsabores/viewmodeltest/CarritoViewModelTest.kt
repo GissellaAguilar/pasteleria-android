@@ -21,7 +21,7 @@ class CarritoViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = CarritoViewModel(dispatcher)
+        viewModel = CarritoViewModel()
     }
 
     @Test

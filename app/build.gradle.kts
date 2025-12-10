@@ -57,12 +57,10 @@ android {
         jvmTarget = "11"
     }
 
-    // --- ACTIVAR JUNIT 5 PARA TEST UNITARIOS ---
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
         }
-        unitTests.isIncludeAndroidResources = true
     }
 
 
@@ -144,4 +142,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     testImplementation(kotlin("test"))
+
 }

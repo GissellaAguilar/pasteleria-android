@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.paseleriamilsabores.ui.components.BottomNavBar
 import com.example.paseleriamilsabores.ui.screens.*
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,6 +19,7 @@ fun AppNavigation() {
 
     val navController = rememberNavController()
     val cartViewModel: CarritoViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel()
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
@@ -43,6 +45,7 @@ fun AppNavigation() {
                 CheckoutScreen(
                     navController = navController,
                     viewModel = cartViewModel,
+                    loginViewModel = loginViewModel,
                     onCompraExitosa = { codigoOrden ->
                         // viewModel ya guarda datos (usuarioActual, ultimoCarrito, ultimoTotalPagado, ultimoCodigoOrden)
                         // pero nos aseguramos de guardar el codigo si viene por callback:
@@ -83,11 +86,23 @@ fun AppNavigation() {
             }
 
             // Otras pantallas
+
+            composable(AppScreens.Mas.route) {
+                MasScreen(navController, loginViewModel)
+            }
+
+            composable(AppScreens.Login.route) {
+                LoginScreen(navController, loginViewModel)
+            }
+
+            composable(AppScreens.Perfil.route) {
+                PerfilScreen(navController, loginViewModel)
+            }
+
             composable(AppScreens.Contacto.route) { ContactoScreen(navController) }
-            composable(AppScreens.Mas.route) { MasScreen(navController) }
-            composable(AppScreens.Perfil.route) { PerfilScreen() }
+
             composable(AppScreens.Registro.route) { RegistroScreen(navController) }
-            composable(AppScreens.Login.route) { LoginScreen(navController) }
+
             composable(AppScreens.Nosotros.route) { NosotrosScreen(navController) }
             composable(AppScreens.Pronto.route) { ProntoScreen(navController) }
         }
