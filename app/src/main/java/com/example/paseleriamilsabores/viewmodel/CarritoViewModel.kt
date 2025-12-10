@@ -32,8 +32,10 @@ class CarritoViewModel : ViewModel() {
     var ultimoCarrito: List<DetallePedido>? = null
     var usuarioActual: Usuario? = null
 
+
+
     init {
-        viewModelScope.launch (dispatcher){
+        viewModelScope.launch {
             _carrito.collect { items ->
                 _totalPagar.value = items.sumOf { it.subtotal }
 
@@ -82,29 +84,35 @@ class CarritoViewModel : ViewModel() {
             } else item
         }
 
-    // ✅ ELIMINAR PRODUCTO
-    fun eliminarProducto(idProducto: Int) {
-        _carrito.value = _carrito.value.filter {
-            it.producto.id != idProducto
-        }
+
+
+
+
+        // ✅ REALIZAR PAGO COMPLETO
+
     }
 
-    fun limpiarCarrito() {
-        _carrito.value = emptyList()
-        _totalPagar.value = 0.0
-    }
-
-    // ✅ REALIZAR PAGO COMPLETO
     fun realizarPago(usuario: Usuario, onResultado: (Boolean, String?) -> Unit = { _, _ -> }) {
         viewModelScope.launch {
             try {
                 usuarioActual = usuario
 
-                val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                val fechaActual =
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
 
+                // 👉 Convertir carrito en lista de detalles
+                val detallesParaEnviar = _carrito.value.map { detalle ->
+                    DetallePedido(
+                        producto = detalle.producto,
+                        cantidad = detalle.cantidad,
+                        subtotal = detalle.subtotal
+                    )
+                }
+
+                // 👉 Enviar pedido con su lista de detalles
                 val pedido = Pedido(
                     usuario = usuario,
-                    detalles = emptyList(),
+                    detalles = detallesParaEnviar,
                     fechaPedido = fechaActual,
                     total = totalPagar.value
                 )
@@ -118,14 +126,10 @@ class CarritoViewModel : ViewModel() {
 
                 val pedidoId = pedidoCreado.idPedido
 
-                _carrito.value.forEach { detalle ->
-                    val detalleParaEnviar = DetallePedido(
-                        producto = detalle.producto,
-                        cantidad = detalle.cantidad,
-                        subtotal = detalle.subtotal,
-                        pedidoId = pedidoId
-                    )
-                    detallePedidoRepository.crearDetallePedido(detalleParaEnviar)
+                // 👉 Ahora guardar los detalles con el ID del pedido
+                detallesParaEnviar.forEach { detalle ->
+                    val detalleConPedidoId = detalle.copy(pedidoId = pedidoId)
+                    detallePedidoRepository.crearDetallePedido(detalleConPedidoId)
                 }
 
                 ultimoCodigoOrden = pedidoId.toString()
@@ -141,6 +145,19 @@ class CarritoViewModel : ViewModel() {
                 onResultado(false, null)
             }
         }
+    }
+
+
+
+    // ✅ ELIMINAR PRODUCTO
+    fun eliminarProducto(idProducto: Int) {
+        _carrito.value = _carrito.value.filter {
+            it.producto.id != idProducto
+        }
+    }
+    fun limpiarCarrito() {
+        _carrito.value = emptyList()
+        _totalPagar.value = 0.0
     }
 
 }

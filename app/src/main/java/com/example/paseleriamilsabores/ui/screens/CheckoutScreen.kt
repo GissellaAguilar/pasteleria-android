@@ -33,6 +33,8 @@ fun CheckoutScreen(
     var direccion by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
+    var run by remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Checkout") }) }
@@ -90,6 +92,14 @@ fun CheckoutScreen(
                     Column(Modifier.padding(16.dp)) {
                         Text("Información del cliente", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = run,
+                            onValueChange = { run = it },
+                            label = { Text("RUN / RUT") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
                         OutlinedTextField(
                             value = nombre,
@@ -152,7 +162,7 @@ fun CheckoutScreen(
                                         direccion = direccion,
                                         region = region,
                                         comuna = comuna,
-                                        run = "",
+                                        run = run,
                                         fechaNac = "",
                                         password = ""
                                     )
@@ -173,6 +183,7 @@ fun CheckoutScreen(
                                     direccion.isNotBlank() &&
                                     region.isNotBlank() &&
                                     comuna.isNotBlank() &&
+                                    run.isNotBlank() &&
                                     carrito.isNotEmpty(),
                             modifier = Modifier
                                 .align(Alignment.End)
