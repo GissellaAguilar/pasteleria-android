@@ -83,4 +83,50 @@ class RegistroViewModelTest {
         // ✅ 2. Limpieza explícita DENTRO del test.
         Dispatchers.resetMain()
     }
+
+    @Test
+    fun `registro con excepcion debe devolver false`() = runTest {
+        // ARRANGE
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+
+        val usuarioRepository = mockk<UsuarioRepository>()
+        val viewModel = RegistroViewModel(usuarioRepository, testDispatcher)
+
+        val usuario = Usuario(
+            run = "99999999",
+            nombre = "Error",
+            apellidos = "Test",
+            correo = "error@test.com",
+            password = "1234",
+            direccion = "Error 123",
+            region = "RM",
+            comuna = "Santiago",
+            fechaNac = "2000-01-01",
+            codigo = null,
+            rol = "USER"
+        )
+
+        // Simula excepción de red, timeout, backend caído, etc.
+        coEvery { usuarioRepository.crearUsuario(any()) } throws RuntimeException("Error de conexión")
+
+        var resultado = true
+        var mensajeError: String? = null
+
+        // ACT
+        viewModel.registrarUsuario(usuario) { exito, error ->
+            resultado = exito
+            mensajeError = error
+        }
+
+        // ASSERT
+        assertFalse(resultado)
+        assertTrue(mensajeError != null)
+
+        coVerify { usuarioRepository.crearUsuario(usuario) }
+
+        // LIMPIEZA
+        Dispatchers.resetMain()
+    }
+
 }
