@@ -1,29 +1,36 @@
 package com.example.paseleriamilsabores.viewmodel
-import android.content.ClipData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.paseleriamilsabores.data.ItemCarrito
+import com.example.paseleriamilsabores.model.DetallePedido
+import com.example.paseleriamilsabores.model.Pedido
 import com.example.paseleriamilsabores.model.Producto
 import com.example.paseleriamilsabores.model.Usuario
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.example.paseleriamilsabores.remote.RetrofitInstance
+import com.example.paseleriamilsabores.repository.DetallePedidoRepository
+import com.example.paseleriamilsabores.repository.PedidoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-class CarritoViewModel (private val dispatcher: CoroutineDispatcher = Dispatchers.Main):
-    ViewModel() {
-    var ultimoUsuario: Usuario? = null
-    var ultimoCodigoOrden: String? = null
-    var ultimoTotalPagado: Double? = null
-    var ultimoCarrito: List<ItemCarrito>? = null
-    var usuarioActual: Usuario? = null
-    private val _carrito = MutableStateFlow<List<ItemCarrito>>(emptyList())
-    val carrito: StateFlow<List<ItemCarrito>> = _carrito.asStateFlow()
+import java.text.SimpleDateFormat
+import java.util.*
+
+class CarritoViewModel : ViewModel() {
+
+    private val pedidoRepository = PedidoRepository(RetrofitInstance.api)
+    private val detallePedidoRepository = DetallePedidoRepository(RetrofitInstance.api)
+
+    private val _carrito = MutableStateFlow<List<DetallePedido>>(emptyList())
+    val carrito: StateFlow<List<DetallePedido>> = _carrito
 
     private val _totalPagar = MutableStateFlow(0.0)
-    val totalPagar: StateFlow<Double> = _totalPagar.asStateFlow()
+    val totalPagar: StateFlow<Double> = _totalPagar
+
+    var ultimoCodigoOrden: String? = null
+    var ultimoTotalPagado: Double? = null
+    var ultimoCarrito: List<DetallePedido>? = null
+    var usuarioActual: Usuario? = null
 
     init {
         viewModelScope.launch (dispatcher){
@@ -39,47 +46,101 @@ class CarritoViewModel (private val dispatcher: CoroutineDispatcher = Dispatcher
     fun agregarProducto(producto: Producto) {
         _carrito.update { items ->
             val existente = items.find { it.producto.id == producto.id }
+
             if (existente != null) {
-                items.map {
-                    if (it.producto.id == producto.id) it.copy(cantidad = it.cantidad + 1) else it
+                items.map { item ->
+                    if (item.producto.id == producto.id) {
+                        val nuevaCantidad = item.cantidad + 1
+                        val nuevoSubtotal = item.producto.precio * nuevaCantidad
+
+                        item.copy(
+                            cantidad = nuevaCantidad,
+                            subtotal = nuevoSubtotal
+                        )
+                    } else item
                 }
             } else {
-                items + ItemCarrito(producto, cantidad = 1)
+                items + DetallePedido(
+                    producto = producto,
+                    cantidad = 1,
+                    subtotal = producto.precio
+                )
             }
         }
     }
 
-    fun modificarCantidad(productoId: Int, cantidad: Int) {
-        _carrito.update { items ->
-            if (cantidad <= 0) items.filter { it.producto.id != productoId }
-            else items.map {
-                if (it.producto.id == productoId) it.copy(cantidad = cantidad) else it
-            }
 
+    // ✅ MODIFICAR CANTIDAD
+    fun modificarCantidad(idProducto: Int, nuevaCantidad: Int) {
+        _carrito.value = _carrito.value.map { item ->
+            if (item.producto.id == idProducto) {
+                val nuevoSubtotal = item.producto.precio * nuevaCantidad
+                item.copy(
+                    cantidad = nuevaCantidad,
+                    subtotal = nuevoSubtotal
+                )
+            } else item
         }
 
-    }
-    fun eliminarProducto(productoId: Int) {
-        _carrito.update { items -> items.filter { it.producto.id != productoId } }
+    // ✅ ELIMINAR PRODUCTO
+    fun eliminarProducto(idProducto: Int) {
+        _carrito.value = _carrito.value.filter {
+            it.producto.id != idProducto
+        }
     }
 
     fun limpiarCarrito() {
         _carrito.value = emptyList()
+        _totalPagar.value = 0.0
     }
 
-    fun realizarPago(usuario: Usuario): Boolean {
-        this.usuarioActual = usuario
-        val pagoExitoso = _totalPagar.value > 0 && (Math.random() > 0.1)
-        val codigo = (10000000..99999999).random().toString()
+    // ✅ REALIZAR PAGO COMPLETO
+    fun realizarPago(usuario: Usuario, onResultado: (Boolean, String?) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            try {
+                usuarioActual = usuario
 
-        ultimoUsuario = usuario
-        ultimoCodigoOrden = codigo
-        ultimoTotalPagado = totalPagar.value
-        ultimoCarrito = carrito.value.toList()
+                val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        if (pagoExitoso) limpiarCarrito()
-        return pagoExitoso
+                val pedido = Pedido(
+                    usuario = usuario,
+                    detalles = emptyList(),
+                    fechaPedido = fechaActual,
+                    total = totalPagar.value
+                )
 
+                val pedidoCreado = pedidoRepository.crearPedido(pedido)
+
+                if (pedidoCreado == null || pedidoCreado.idPedido == null) {
+                    onResultado(false, null)
+                    return@launch
+                }
+
+                val pedidoId = pedidoCreado.idPedido
+
+                _carrito.value.forEach { detalle ->
+                    val detalleParaEnviar = DetallePedido(
+                        producto = detalle.producto,
+                        cantidad = detalle.cantidad,
+                        subtotal = detalle.subtotal,
+                        pedidoId = pedidoId
+                    )
+                    detallePedidoRepository.crearDetallePedido(detalleParaEnviar)
+                }
+
+                ultimoCodigoOrden = pedidoId.toString()
+                ultimoTotalPagado = totalPagar.value
+                ultimoCarrito = _carrito.value.toList()
+
+                limpiarCarrito()
+
+                onResultado(true, ultimoCodigoOrden)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onResultado(false, null)
+            }
+        }
     }
 
 }

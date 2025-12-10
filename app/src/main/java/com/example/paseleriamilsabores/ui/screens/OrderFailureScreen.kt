@@ -13,14 +13,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.compose.errorContainerLight
 import com.example.compose.onTertiaryContainerLight
-import com.example.paseleriamilsabores.data.ItemCarrito
+import com.example.paseleriamilsabores.model.DetallePedido
 import com.example.paseleriamilsabores.model.Usuario
 
 @Composable
 fun OrderFailureScreen(
     navController: NavController,
     usuario: Usuario,
-    carrito: List<ItemCarrito>,
+    carrito: List<DetallePedido>,
     totalReal: Double,
     codigoOrden: String
 ) {

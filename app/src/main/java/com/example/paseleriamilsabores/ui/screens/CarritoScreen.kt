@@ -84,7 +84,7 @@ fun CarritoScreen(navController: NavController, viewModel: CarritoViewModel
 }
 
 @Composable
-fun CartItemRow(item: ItemCarrito, viewModel: CarritoViewModel) {
+fun CartItemRow(item: com.example.paseleriamilsabores.model.DetallePedido, viewModel: CarritoViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         // Usa un SurfaceVariant (fondo claro) que contrasta con el primaryContainer del Summary
