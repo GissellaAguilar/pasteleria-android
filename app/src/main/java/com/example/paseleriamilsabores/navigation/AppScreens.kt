@@ -18,6 +18,8 @@ sealed class AppScreens(val route: String) {
     object Perfil : AppScreens("perfil")
     object Nosotros : AppScreens("nosotros")
     object Pronto : AppScreens("pronto")
+    object Admin : AppScreens("admin")
+
 
 
 }
