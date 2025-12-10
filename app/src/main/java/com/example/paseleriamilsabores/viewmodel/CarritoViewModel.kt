@@ -33,7 +33,7 @@ class CarritoViewModel : ViewModel() {
     var usuarioActual: Usuario? = null
 
     init {
-        viewModelScope.launch (dispatcher){
+        viewModelScope.launch {
             _carrito.collect { items ->
                 _totalPagar.value = items.sumOf { it.subtotal }
 
@@ -82,6 +82,8 @@ class CarritoViewModel : ViewModel() {
             } else item
         }
 
+
+    }
     // ✅ ELIMINAR PRODUCTO
     fun eliminarProducto(idProducto: Int) {
         _carrito.value = _carrito.value.filter {
@@ -100,7 +102,8 @@ class CarritoViewModel : ViewModel() {
             try {
                 usuarioActual = usuario
 
-                val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                val fechaActual =
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
                 val pedido = Pedido(
                     usuario = usuario,
@@ -142,5 +145,4 @@ class CarritoViewModel : ViewModel() {
             }
         }
     }
-
 }

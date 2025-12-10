@@ -11,10 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.isPopupLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.navigation.AppScreens
 import com.example.paseleriamilsabores.model.Usuario
 import com.example.paseleriamilsabores.remote.RetrofitInstance
+import com.example.paseleriamilsabores.viewmodel.RegistroViewModel
+import com.example.paseleriamilsabores.viewmodel.RegistroViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,6 +26,8 @@ import kotlinx.coroutines.launch
 fun RegistroScreen(navController: NavController) {
 
     val context = LocalContext.current
+    val viewModel : RegistroViewModel = viewModel(factory = RegistroViewModelFactory())
+
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -163,26 +169,20 @@ fun RegistroScreen(navController: NavController) {
                         rol = "USER"
                     )
 
-
-                    isLoading = true
-
-                    scope.launch {
-                        try {
-                            val creado = RetrofitInstance.api.crearUsuario(nuevoUsuario)
-
-                            isLoading = false
-                            Toast.makeText(context, "Registro exitoso 🎉", Toast.LENGTH_SHORT).show()
-
-                            navController.navigate(AppScreens.Login.route) {
+                    viewModel.registrarUsuario(nuevoUsuario){exito, error ->
+                        if (exito){
+                            Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                            navController.navigate(AppScreens.Login.route){
                                 popUpTo(AppScreens.Registro.route) { inclusive = true }
                             }
-
-                        } catch (e: Exception) {
-                            isLoading = false
-                            Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        } else{
+                            Toast.makeText(
+                                context,
+                                error ?: "Error al registrar usuario",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
-
 
                 },
                 modifier = Modifier.fillMaxWidth(),
