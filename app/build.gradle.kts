@@ -106,21 +106,23 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
 // --- Testing ---
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.8")
+    androidTestImplementation("io.mockk:mockk-android:1.13.8")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     testImplementation("org.mockito:mockito-core:5.11.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.0.0")
-// JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
-
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    testImplementation(kotlin("test"))
 }
 tasks.withType<Test> {
     useJUnitPlatform()
