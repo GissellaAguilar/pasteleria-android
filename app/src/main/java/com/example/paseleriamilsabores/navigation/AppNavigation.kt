@@ -1,8 +1,10 @@
 package com.example.paseleriamilsabores.navigation
 
+import NotAuthorizedScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -11,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.paseleriamilsabores.ui.components.BottomNavBar
 import com.example.paseleriamilsabores.ui.screens.*
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,6 +21,7 @@ fun AppNavigation() {
 
     val navController = rememberNavController()
     val cartViewModel: CarritoViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel()
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
@@ -43,6 +47,7 @@ fun AppNavigation() {
                 CheckoutScreen(
                     navController = navController,
                     viewModel = cartViewModel,
+                    loginViewModel = loginViewModel,
                     onCompraExitosa = { codigoOrden ->
                         // viewModel ya guarda datos (usuarioActual, ultimoCarrito, ultimoTotalPagado, ultimoCodigoOrden)
                         // pero nos aseguramos de guardar el codigo si viene por callback:
@@ -83,13 +88,37 @@ fun AppNavigation() {
             }
 
             // Otras pantallas
+
+            composable(AppScreens.Mas.route) {
+                MasScreen(navController, loginViewModel)
+            }
+
+            composable(AppScreens.Login.route) {
+                LoginScreen(navController, loginViewModel)
+            }
+
+            composable(AppScreens.Perfil.route) {
+                PerfilScreen(navController, loginViewModel)
+            }
+
             composable(AppScreens.Contacto.route) { ContactoScreen(navController) }
-            composable(AppScreens.Mas.route) { MasScreen(navController) }
-            composable(AppScreens.Perfil.route) { PerfilScreen() }
+
             composable(AppScreens.Registro.route) { RegistroScreen(navController) }
-            composable(AppScreens.Login.route) { LoginScreen(navController) }
+
             composable(AppScreens.Nosotros.route) { NosotrosScreen(navController) }
             composable(AppScreens.Pronto.route) { ProntoScreen(navController) }
+
+            composable(AppScreens.Admin.route) {
+                val usuario = loginViewModel.usuarioLogeado.collectAsState().value
+
+                if (usuario?.rol == "ADMIN") {
+                    AdminScreen(navController, loginViewModel)
+                } else {
+                    // Si no es administrador, bloquear acceso
+                    NotAuthorizedScreen(navController)
+                }
+            }
+
         }
     }
 }

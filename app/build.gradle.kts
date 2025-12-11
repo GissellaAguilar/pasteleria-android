@@ -57,6 +57,12 @@ android {
         jvmTarget = "11"
     }
 
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
 
 }
 tasks.withType<Test> {
@@ -116,10 +122,9 @@ dependencies {
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.androidx.compose.runtime)
 
 // --- Testing ---
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("io.mockk:mockk:1.13.8")
     androidTestImplementation("io.mockk:mockk-android:1.13.8")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -138,4 +143,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     testImplementation(kotlin("test"))
+
 }

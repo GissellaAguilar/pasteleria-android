@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.paseleriamilsabores.model.Usuario
 import com.example.paseleriamilsabores.viewmodel.CarritoViewModel
+import com.example.paseleriamilsabores.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,12 +20,15 @@ import kotlinx.coroutines.launch
 fun CheckoutScreen(
     navController: NavController,
     viewModel: CarritoViewModel,
+    loginViewModel: LoginViewModel,
     onCompraExitosa: (String?) -> Unit,
     onCompraFallida: (String?) -> Unit
 ) {
     val carrito by viewModel.carrito.collectAsState()
     val totalPagar by viewModel.totalPagar.collectAsState()
     val scope = rememberCoroutineScope()
+    val usuarioLogeado by loginViewModel.usuarioLogeado.collectAsState()
+
 
     // Estado del formulario
     var nombre by remember { mutableStateOf("") }
@@ -33,6 +37,20 @@ fun CheckoutScreen(
     var direccion by remember { mutableStateOf("") }
     var region by remember { mutableStateOf("") }
     var comuna by remember { mutableStateOf("") }
+    var run by remember { mutableStateOf("") }
+
+    LaunchedEffect(usuarioLogeado) {
+        usuarioLogeado?.let { user ->
+            nombre = user.nombre ?: ""
+            apellidos = user.apellidos ?: ""
+            correo = user.correo ?: ""
+            direccion = user.direccion ?: ""
+            region = user.region ?: ""
+            comuna = user.comuna ?: ""
+            run = user.run ?: ""
+        }
+    }
+
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Checkout") }) }
@@ -90,6 +108,14 @@ fun CheckoutScreen(
                     Column(Modifier.padding(16.dp)) {
                         Text("Información del cliente", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = run,
+                            onValueChange = { run = it },
+                            label = { Text("RUN / RUT") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
                         OutlinedTextField(
                             value = nombre,
@@ -152,7 +178,7 @@ fun CheckoutScreen(
                                         direccion = direccion,
                                         region = region,
                                         comuna = comuna,
-                                        run = "",
+                                        run = run,
                                         fechaNac = "",
                                         password = ""
                                     )
@@ -173,6 +199,7 @@ fun CheckoutScreen(
                                     direccion.isNotBlank() &&
                                     region.isNotBlank() &&
                                     comuna.isNotBlank() &&
+                                    run.isNotBlank() &&
                                     carrito.isNotEmpty(),
                             modifier = Modifier
                                 .align(Alignment.End)

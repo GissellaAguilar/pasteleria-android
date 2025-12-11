@@ -4,6 +4,9 @@ package com.example.paseleriamilsabores.remote
     import com.example.paseleriamilsabores.model.Pedido
     import com.example.paseleriamilsabores.model.Producto
     import com.example.paseleriamilsabores.model.Usuario
+    import com.example.paseleriamilsabores.model.LoginRequest
+    import com.example.paseleriamilsabores.model.LoginResponse
+
     import retrofit2.Response
     import retrofit2.http.*
 
@@ -35,6 +38,11 @@ package com.example.paseleriamilsabores.remote
         // DELETE: /api/usuario/{run}
         @DELETE("/api/usuario/{run}")
         suspend fun deleteUsuario(@Path("run") run: String): Unit
+
+        // POST: /api/auth/login
+        @POST("/api/auth/login")
+        suspend fun login(@Body request: LoginRequest): LoginResponse
+
 
 
         // =================================================================
