@@ -122,6 +122,7 @@ dependencies {
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.androidx.compose.runtime)
 
 // --- Testing ---
     testImplementation("io.mockk:mockk:1.13.8")
