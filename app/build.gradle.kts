@@ -57,14 +57,6 @@ android {
         jvmTarget = "11"
     }
 
-    // --- ACTIVAR JUNIT 5 PARA TEST UNITARIOS ---
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
-        unitTests.isIncludeAndroidResources = true
-    }
-
 
 }
 tasks.withType<Test> {
@@ -126,6 +118,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
 // --- Testing ---
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("io.mockk:mockk:1.13.8")
     androidTestImplementation("io.mockk:mockk-android:1.13.8")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
